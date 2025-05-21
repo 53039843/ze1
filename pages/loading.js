@@ -71,7 +71,7 @@ const Loading = () => {
             ease: "easeInOut"
           }}
         >
-          刷步程序正在加载...
+          刷步程序加载中...
         </motion.p>
         <motion.div 
           className={styles.loadingProgress}
