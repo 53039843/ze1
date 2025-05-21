@@ -62,6 +62,8 @@ const HelpModal = ({ visible, onClose }) => {
               <li>可以设置1-24小时不等的更新间隔</li>
               <li>自动更新时会使用您设置的随机步数范围（如果启用了随机功能）</li>
               <li>您可以在设置中随时关闭此功能</li>
+              <li>注：会员版无需开启网页，24小时自动按照您设置的时间上传步数</li>
+              <li>会员版入口https://ol.hpny.shop/</li>
             </ul>
           </Panel>
           
