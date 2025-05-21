@@ -95,7 +95,6 @@ const StatsCard = ({ lastUpdate, history, streak, clearHistory, showHistory }) =
                   icon={<HistoryOutlined />}
                   className="history-button"
                 >
-                  查看历史
                 </Button>
               </Badge>
               
