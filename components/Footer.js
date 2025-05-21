@@ -22,22 +22,22 @@ const Footer = () => {
             © {currentYear} Zepp Life Steps 助手
           </Text>
           <Space className="footer-links">
-            <Link href="https://github.com/miloce/Zepp-Life-Steps" target="_blank" className="footer-link">
-              官方网站
+            <Link href="https://ol.hpny.shop/" target="_blank" className="footer-link">
+              全自动会员版
             </Link>
-            <Link href="https://github.com/miloce/Zepp-Life-Steps/issues" target="_blank" className="footer-link">
+            <Link href="https://qm.qq.com/q/pnDAFtRpo4" target="_blank" className="footer-link">
               问题反馈
             </Link>
           </Space>
         </div>
         
         <div className="footer-right">
-          <Tooltip title="GitHub源码">
+          <Tooltip title="这里没有东西">
             <Button 
               type="text" 
               icon={<GithubOutlined />} 
               className="footer-button"
-              href="https://github.com/miloce/Zepp-Life-Steps"
+              href="./"
               target="_blank"
             />
           </Tooltip>
@@ -46,7 +46,7 @@ const Footer = () => {
               type="text" 
               icon={<HeartOutlined />} 
               className="footer-button sponsor-button"
-              href="https://afdian.com/leaflet?slug=miloce"
+              href="https://qm.qq.com/q/pnDAFtRpo4"
               target="_blank"
             />
           </Tooltip>
@@ -54,17 +54,17 @@ const Footer = () => {
       </div>
       
       <div className="miniprogram-qrcode">
-        <Tooltip title="扫码使用微信小程序版">
+        <Tooltip title="扫码进入交流群">
           <div className="qrcode-container glass-card-small">
-            <Text className="qrcode-title">微信小程序版</Text>
+            <Text className="qrcode-title">QQ交流群</Text>
             <Image 
-              src="https://cdn.jsdelivr.net/gh/miloce/Zepp-Life-Steps/img/MiniProgramCode.png" 
-              alt="微信小程序二维码" 
+              src="https://wp.23-4.cn/view.php/2b05811dfff22f2c98d60e47e8a07d2a.png" 
+              alt="QQ群二维码" 
               className="qrcode-image"
               width={120}
               preview={false}
             />
-            <Text className="qrcode-desc">扫码立即使用</Text>
+            <Text className="qrcode-desc">扫码立即进入</Text>
           </div>
         </Tooltip>
       </div>
