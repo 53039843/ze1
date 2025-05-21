@@ -19,7 +19,7 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-left">
           <Text className="copyright">
-            © {currentYear} Zepp Life Steps 助手
+            © {currentYear} 京IPC备7000001-6号
           </Text>
           <Space className="footer-links">
             <Link href="https://ol.hpny.shop/" target="_blank" className="footer-link">
