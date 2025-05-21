@@ -33,7 +33,7 @@ const Header = ({ onShowSettings, onShowHelp, streak }) => {
               }}
             >
               <img 
-                src="/logo.png" 
+                src="https://wp.23-4.cn/view.php/232ae078627a9a29f2b2ce12dbb90706.jpg" 
                 alt="Zepp Life" 
                 className="logo-image" 
                 onError={(e) => {
@@ -41,7 +41,7 @@ const Header = ({ onShowSettings, onShowHelp, streak }) => {
                 }}
               />
             </motion.div>
-            <Title level={3} className="site-title">Zepp Life 步数修改助手</Title>
+            <Title level={3} className="site-title">您的专属步数修改助手</Title>
           </div>
         </div>
       </motion.div>
