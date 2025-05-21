@@ -319,9 +319,9 @@ const Home = () => {
         <meta property="og:title" content="微信支付宝运动步数修改 - Zepp Life步数修改助手" />
         <meta property="og:description" content="专业的微信运动、支付宝运动步数一键修改工具，支持随机生成和自动更新，无需刷固件，100%成功率。" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://zepp-life-steps.vercel.app/" />
+        <meta property="og:url" content="https://s.vercel.app/" />
         <meta property="og:site_name" content="微信支付宝运动步数修改助手" />
-        <meta property="og:image" content="https://zepp-life-steps.vercel.app/logo.png" />
+        <meta property="og:image" content="https://s.vercel.app/logo.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:locale" content="zh_CN" />
@@ -330,7 +330,7 @@ const Home = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="微信支付宝运动步数修改 - 安全稳定的一键同步工具" />
         <meta name="twitter:description" content="一键修改微信运动、支付宝运动步数，排名靠前不被检测，支持随机生成和自动定时更新。" />
-        <meta name="twitter:image" content="https://zepp-life-steps.vercel.app/logo.png" />
+        <meta name="twitter:image" content="https://s.vercel.app/logo.png" />
         
         {/* 其他重要元标签 */}
         <meta name="application-name" content="微信支付宝运动步数修改助手" />
@@ -341,7 +341,7 @@ const Home = () => {
         <meta name="theme-color" content="#6366f1" />
         
         {/* 规范链接 */}
-        <link rel="canonical" href="https://zepp-life-steps.vercel.app/" />
+        <link rel="canonical" href="https://s.vercel.app/" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/logo.png" />
         
