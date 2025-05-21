@@ -6,4 +6,4 @@ Allow: /
 # Disallow: /api/
 
 # 设置网站地图
-Sitemap: https://steps.luozhinet.com/sitemap.xml 
+Sitemap: https://ze1.hpny.shop/sitemap.xml 
