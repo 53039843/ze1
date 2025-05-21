@@ -17,7 +17,6 @@ const StatsCard = ({ lastUpdate, history, streak, clearHistory, showHistory }) =
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
     >
-            </Link>
       <div className="card-header">
         <Title level={3} className="glass-title">数据统计</Title>
         <Text className="glass-subtitle">您的步数更新统计</Text>
