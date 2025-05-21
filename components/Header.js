@@ -41,7 +41,7 @@ const Header = ({ onShowSettings, onShowHelp, streak }) => {
                 }}
               />
             </motion.div>
-            <Title level={3} className="site-title">您的专属步数修改助手</Title>
+            <Title level={3} className="site-title">您的专属刷步神器~</Title>
           </div>
         </div>
       </motion.div>
