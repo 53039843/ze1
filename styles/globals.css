@@ -1,0 +1,985 @@
+/* 全局CSS变量和基础样式 */
+:root {
+  /* 核心颜色 */
+  --primary-color: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --secondary-color: #ec4899;
+  --secondary-light: #f472b6;
+  --secondary-dark: #db2777;
+  
+  /* 功能性颜色 */
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
+  
+  /* 背景和前景 */
+  --bg-light: #f9fafb;
+  --bg-dark: #111827;
+  --text-light: #f9fafb;
+  --text-dark: #1f2937;
+  --text-muted-light: rgba(249, 250, 251, 0.7);
+  --text-muted-dark: rgba(31, 41, 55, 0.7);
+  
+  /* 玻璃态效果 */
+  --glass-bg-light: rgba(255, 255, 255, 0.1);
+  --glass-bg-dark: rgba(30, 30, 30, 0.1);
+  --glass-border-light: rgba(255, 255, 255, 0.15);
+  --glass-border-dark: rgba(255, 255, 255, 0.05);
+  --glass-shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  --glass-shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  --glass-blur: blur(10px);
+
+  /* 间距和尺寸 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  /* 动画 */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* 排版 */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  
+  /* Z-index层级 */
+  --z-index-dropdown: 1000;
+  --z-index-modal: 2000;
+  --z-index-popup: 3000;
+  --z-index-tooltip: 4000;
+  --z-index-toast: 5000;
+}
+
+/* 重置样式 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  line-height: 1.5;
+  color: var(--text-dark);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background var(--transition-normal);
+}
+
+.dark-mode body {
+  color: var(--text-light);
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%);
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-full);
+  transition: var(--transition-normal);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* 动画关键帧 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(5deg); }
+  66% { transform: translateY(5px) rotate(-5deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* 预定义动画类 */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.5s ease forwards;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+.animate-float {
+  animation: float 6s infinite ease-in-out;
+}
+
+/* 访问性 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* 实用工具类 */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.w-screen { width: 100vw; }
+.h-screen { height: 100vh; }
+
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: var(--radius-full); }
+
+.shadow-sm { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+.shadow-md { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+.shadow-lg { box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); }
+.shadow-inner { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); }
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  :root {
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+    --spacing-2xl: 32px;
+    --font-size-3xl: 24px;
+    --font-size-4xl: 30px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    position: relative;
+  }
+  
+  .logo-section {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .site-title {
+    font-size: 20px !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .floating-action-buttons {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .history-drawer .ant-drawer-content-wrapper {
+    width: 85% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-title {
+    font-size: 18px !important;
+  }
+  
+  .logo-image {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .glass-card {
+    padding: 16px 12px;
+  }
+  
+  .floating-button {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 18px !important;
+  }
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Glassmorphism 样式 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  padding: 20px;
+  color: #fff;
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+.glass-input:hover, .glass-input:focus {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.glass-button {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px);
+}
+
+.glass-title {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.glass-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+} 
+
+.app-container {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode {
+  background-color: #1f1f1f;
+  color: #fff;
+}
+
+.glass-card {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .glass-card {
+  background-color: rgba(30, 30, 30, 0.8);
+}
+
+.glass-title {
+  text-align: center;
+  margin-bottom: 8px !important;
+}
+
+.glass-subtitle {
+  text-align: center;
+  margin-bottom: 24px !important;
+}
+
+.glass-input {
+  border-radius: 8px;
+}
+
+.glass-button {
+  border-radius: 8px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.glass-footer {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.last-update-container {
+  margin-top: 24px;
+}
+
+.app-container {
+  transition: background-color 0.3s, color 0.3s;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark-mode {
+  background-color: #1f1f1f;
+  color: #fff;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.dark-mode .app-header {
+  background-color: rgba(30, 30, 30, 0.8);
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-content {
+  flex: 1;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.glass-card {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .glass-card {
+  background-color: rgba(30, 30, 30, 0.8);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.glass-title {
+  margin-bottom: 8px !important;
+}
+
+.glass-subtitle {
+  margin-bottom: 24px !important;
+}
+
+.glass-input {
+  border-radius: 8px;
+}
+
+.glass-button {
+  border-radius: 8px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.dark-mode .app-footer {
+  background-color: rgba(30, 30, 30, 0.8);
+}
+
+.success-alert {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 400px;
+}
+
+.steps-form {
+  margin-top: 24px;
+}
+
+.last-update-container {
+  margin-top: 24px;
+}
+
+.history-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.help-content, .settings-content {
+  padding: 0 16px;
+}
+
+.help-content h3, .settings-content h3 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.about-content {
+  text-align: center;
+  padding: 0 16px;
+}
+
+.about-logo {
+  margin-bottom: 24px;
+}
+
+.project-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.qrcode-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+
+/* 浮动操作按钮 */
+.floating-action-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1050;
+}
+
+.floating-button {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1)) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  margin-bottom: 8px !important;
+  color: #fff !important;
+  padding: 0 !important;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.floating-button:hover, 
+.floating-button:focus {
+  transform: scale(1.1);
+  opacity: 1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15)) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+.streak-badge .ant-badge-count {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* 在小屏幕设备上的特殊样式 */
+@media (max-width: 768px) {
+  .floating-action-buttons {
+    bottom: 15px;
+    right: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-button {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 18px !important;
+  }
+  
+  .floating-action-buttons {
+    gap: 8px;
+    bottom: 12px;
+    right: 12px;
+  }
+}
+
+/* 强制色彩模式支持 - 现代标准替代-ms-high-contrast */
+@media (forced-colors: active) {
+  /* 确保按钮边界清晰可见 */
+  .header-button, 
+  .glass-button, 
+  button,
+  .ant-btn,
+  .floating-button {
+    forced-color-adjust: none;
+    border: 2px solid ButtonText !important;
+    background-color: ButtonFace !important;
+    color: ButtonText !important;
+    box-shadow: none !important;
+    transform: none !important;
+    backdrop-filter: none !important;
+    padding: 4px 12px !important;
+  }
+
+  /* 确保图标可见 */
+  .anticon,
+  .ant-checkbox-inner,
+  .ant-radio-inner {
+    forced-color-adjust: none;
+    color: ButtonText !important;
+    opacity: 1 !important;
+  }
+
+  /* 确保链接仍然可辨识 */
+  a {
+    forced-color-adjust: none;
+    color: LinkText !important;
+    text-decoration: underline !important;
+  }
+
+  /* 输入框边框 */
+  input, 
+  .glass-input, 
+  .ant-input,
+  .ant-input-number,
+  .ant-select-selector {
+    forced-color-adjust: none;
+    border: 2px solid ButtonText !important;
+    background-color: Field !important;
+    color: FieldText !important;
+    padding: 6px !important;
+  }
+
+  /* 调整玻璃态效果在高对比度模式下的显示 */
+  .glass-card,
+  .glass-card-small,
+  .history-drawer .ant-drawer-content,
+  .history-item,
+  .ant-modal-content,
+  .ant-collapse-content,
+  .ant-select-dropdown,
+  .ant-drawer-header,
+  .ant-drawer-body,
+  .ant-drawer-footer {
+    forced-color-adjust: none;
+    background-color: Canvas !important;
+    border: 2px solid CanvasText !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* 确保文本可读性 */
+  .ant-typography,
+  .ant-modal-title,
+  .ant-drawer-title,
+  .drawer-footer-text,
+  .history-item .ant-typography,
+  p, h1, h2, h3, h4, h5, h6, span {
+    color: CanvasText !important;
+    text-shadow: none !important;
+  }
+
+  /* 调整标签颜色 */
+  .ant-tag {
+    border: 2px solid ButtonText !important;
+    background: ButtonFace !important;
+    color: ButtonText !important;
+    padding: 2px 8px !important;
+  }
+
+  /* 为图标添加背景圆形，使其更明显 */
+  .history-item .ant-typography + div {
+    background-color: ButtonFace !important;
+    border: 1px solid ButtonText !important;
+    border-radius: 50% !important;
+  }
+
+  /* 增强历史记录的可见性 */
+  .history-list-container .history-item {
+    border: 2px solid ButtonText !important;
+    margin-bottom: 12px !important;
+    padding: 12px !important;
+  }
+
+  /* 浮动按钮调整 */
+  .floating-action-buttons .floating-button {
+    width: 50px !important;
+    height: 50px !important;
+    opacity: 1 !important;
+  }
+
+  /* 禁用一些视觉效果但保留焦点指示器 */
+  .ant-btn:hover, 
+  .ant-btn:focus,
+  .floating-button:hover,
+  .floating-button:focus {
+    transform: none !important;
+    box-shadow: none !important;
+    outline: 2px solid Highlight !important;
+  }
+}
+
+/* 隐私政策页面样式 */
+.privacy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-color);
+  transition: var(--transition-normal);
+}
+
+.back-link:hover {
+  opacity: 0.8;
+}
+
+.privacy-card {
+  margin-bottom: 30px;
+}
+
+.markdown-content {
+  color: #fff;
+  line-height: 1.8;
+}
+
+.markdown-content h1 {
+  font-size: 28px;
+  margin-top: 0;
+  margin-bottom: 24px;
+  color: #fff;
+}
+
+.markdown-content h2 {
+  font-size: 22px;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.markdown-content h3 {
+  font-size: 18px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.markdown-content p {
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.markdown-content ul, 
+.markdown-content ol {
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+
+.markdown-content li {
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.markdown-content a {
+  color: var(--primary-light);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(129, 140, 248, 0.5);
+  transition: var(--transition-normal);
+}
+
+.markdown-content a:hover {
+  color: var(--primary-color);
+  border-bottom-style: solid;
+}
+
+.markdown-content strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 背景容器和效果 */
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none; /* 允许点击穿透 */
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+}
+
+.dark-mode .background-container {
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 100%);
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+  opacity: 0.5; /* 增加不透明度 */
+  filter: blur(60px); /* 减少模糊程度 */
+  mix-blend-mode: screen;
+  transform-origin: center center;
+}
+
+.shape-1 {
+  top: 15%;
+  left: 10%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.6) 0%, rgba(99, 102, 241, 0.2) 70%);
+}
+
+.shape-2 {
+  bottom: 20%;
+  right: 15%;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.6) 0%, rgba(236, 72, 153, 0.2) 70%);
+}
+
+.shape-3 {
+  top: 60%;
+  left: 30%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.6) 0%, rgba(16, 185, 129, 0.2) 70%);
+}
+
+.shape-4 {
+  top: 30%;
+  right: 25%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.6) 0%, rgba(59, 130, 246, 0.2) 70%);
+}
+
+.shape-5 {
+  bottom: 10%;
+  left: 20%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.6) 0%, rgba(245, 158, 11, 0.2) 70%);
+}
+
+.shape-6 {
+  top: 50%;
+  left: 60%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, rgba(139, 92, 246, 0.2) 70%);
+}
+
+.particle, .small-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.particle {
+  filter: blur(0.5px);
+  animation: pulseLight 3s infinite alternate;
+}
+
+.small-particle {
+  filter: blur(0.2px);
+  animation: floatParticle 8s infinite ease-in-out;
+}
+
+/* 粒子光晕效果 */
+@keyframes pulseLight {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.9); }
+}
+
+@keyframes floatParticle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-15px) rotate(5deg); }
+  50% { transform: translateY(0) rotate(10deg); }
+  75% { transform: translateY(15px) rotate(5deg); }
+}
+
+/* 暗模式下的背景效果调整 */
+.dark-mode .shape {
+  mix-blend-mode: multiply;
+  opacity: 0.3;
+}
+
+.dark-mode .particle, 
+.dark-mode .small-particle {
+  filter: blur(1px);
+  opacity: 0.8;
+}
+
+/* 高对比度模式支持 */
+@media (forced-colors: active) {
+  .shape, .particle, .small-particle {
+    display: none;
+  }
+  
+  /* 添加简单高对比度友好的背景 */
+  .background-container::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: Canvas;
+    z-index: -1;
+  }
+}
+
+/* 移动设备优化 */
+@media (max-width: 768px) {
+  .shape {
+    width: 200px;
+    height: 200px;
+    filter: blur(50px);
+  }
+}
+
+@media (max-width: 480px) {
+  .shape {
+    width: 150px;
+    height: 150px;
+    filter: blur(40px);
+  }
+  
+  /* 移动设备上减少粒子数量和效果以提高性能 */
+  .small-particle:nth-child(odd) {
+    display: none;
+  }
+}

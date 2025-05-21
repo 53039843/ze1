@@ -1,0 +1,9 @@
+# 允许所有搜索引擎爬虫
+User-agent: *
+Allow: /
+
+# 禁止访问某些特定资源（如有必要）
+# Disallow: /api/
+
+# 设置网站地图
+Sitemap: https://steps.luozhinet.com/sitemap.xml 

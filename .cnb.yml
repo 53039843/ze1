@@ -1,0 +1,15 @@
+# .cnb.yml
+$:
+  vscode:
+    - docker:
+        # 使用官方 Node.js 20 镜像，确保最新功能与性能
+        image: node:20
+      services:
+        - vscode   # code-server 支持 VSCode Web IDE
+        - docker   # 如需在远程环境内运行 Docker 容器
+      # 环境启动后自动执行的流水线任务
+      stages:
+        - name: 安装依赖
+          script: npm ci
+        - name: 启动开发服务器
+          script: npm run dev

@@ -1,0 +1,23 @@
+{
+  "name": "微信支付宝运动步数修改助手",
+  "short_name": "微信步数修改",
+  "description": "专业的微信运动、支付宝运动步数修改工具，通过Zepp Life(小米运动)接口安全同步，支持随机步数生成和自动定时更新。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#6366f1",
+  "theme_color": "#6366f1",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+} 
