@@ -53,22 +53,6 @@ const Footer = () => {
         </div>
       </div>
       
-      <div className="miniprogram-qrcode">
-        <Tooltip title="扫码进入交流群">
-          <div className="qrcode-container glass-card-small">
-            <Text className="qrcode-title">QQ交流群</Text>
-            <Image 
-              src="https://wp.23-4.cn/view.php/2b05811dfff22f2c98d60e47e8a07d2a.png" 
-              alt="QQ群二维码" 
-              className="qrcode-image"
-              width={120}
-              preview={false}
-            />
-            <Text className="qrcode-desc">扫码立即进入</Text>
-          </div>
-        </Tooltip>
-      </div>
-      
       <div className="footer-disclaimer">
         <Text type="secondary" className="disclaimer-text">
           免责声明：本工具仅供学习研究，使用本工具所产生的任何后果由使用者自行承担
