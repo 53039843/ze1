@@ -22,7 +22,7 @@ const Footer = () => {
             © {currentYear} 京IPC备7000001-6号
           </Text>
           <Space className="footer-links">
-            <Link href="https://ol.hpny.shop/" target="_blank" className="footer-link">
+            <Link href="https://ol.xhy6.com/" target="_blank" className="footer-link">
               全自动会员版
             </Link>
             <Link href="https://qm.qq.com/q/pnDAFtRpo4" target="_blank" className="footer-link">
