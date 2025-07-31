@@ -6,4 +6,4 @@ Allow: /
 # Disallow: /api/
 
 # 设置网站地图
-Sitemap: https://ze1.hpny.shop/sitemap.xml 
+Sitemap: https://ze1.xhy6.com/sitemap.xml 
