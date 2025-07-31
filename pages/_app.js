@@ -22,15 +22,15 @@ function MyApp({ Component, pageProps }) {
     titleTemplate: '%s | 微信支付宝运动步数修改',
     defaultTitle: '微信支付宝运动步数修改 - 专业自动步数同步工具',
     description: '专业的微信运动、支付宝运动步数修改工具，通过Zepp Life接口安全同步，支持随机步数生成和自动定时更新，让您轻松跑步打卡。',
-    canonical: 'https://s.hpny.shop/',
+    canonical: 'https://s.xhy6.com/',
     openGraph: {
       type: 'website',
       locale: 'zh_CN',
-      url: 'https://s.hpny.shop/',
+      url: 'https://s.xhy6.com/',
       siteName: '微信支付宝运动步数修改助手',
       images: [
         {
-          url: 'https://s.hpny.shop/logo.png',
+          url: 'https://s.xhy6.com/logo.png',
           width: 1200,
           height: 630,
           alt: '微信支付宝运动步数修改工具',
