@@ -26,7 +26,7 @@
 
 扫描下方二维码，即可使用微信小程序版本，随时随地修改步数！
 
-![微信小程序二维码](https://static.luozhinet.com/MiniProgramCode.png)
+![微信小程序二维码](https://s.xhy6.com/MiniProgramCode.png)
 
 ## 📸 应用界面
 
@@ -36,7 +36,7 @@
 
 ### Web 版本
 
-1. 访问我们的网站 [steps.luozhinet.com](https://steps.luozhinet.com)
+1. 访问我们的网站 [steps.luozhinet.com](https://s.xhy6.com)
 2. 输入您的 Zepp Life 账号和密码
 3. 设置您想要的步数
 4. 点击提交，等待同步完成
@@ -82,7 +82,7 @@ GET /api/update-steps?account=您的账号&password=您的密码&steps=想要的
 **示例：**
 
 ```
-https://steps.luozhinet.com/api/update-steps?account=example@mail.com&password=yourpassword&steps=25000
+https://s.xhy6.com/api/update-steps?account=example@mail.com&password=yourpassword&steps=25000
 ```
 
 **返回结果：**
