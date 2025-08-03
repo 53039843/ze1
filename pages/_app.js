@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
   // 添加全局SEO配置
   const seoConfig = {
     titleTemplate: '%s | 微信支付宝运动步数修改',
-    defaultTitle: '微信支付宝运动步数修改 - 专业自动步数同步工具',
+    defaultTitle: '微信支付宝运动步数修改-专业自动步数同步工具',
     description: '专业的微信运动、支付宝运动步数修改工具，通过Zepp Life接口安全同步，支持随机步数生成和自动定时更新，让您轻松跑步打卡。',
     keywords: '免费刷步,修改微信步数,微信刷步,支付宝刷步,刷步神器,步数修改,步数同步,微信运动刷步微信运动, 支付宝运动, 步数修改, Zepp Life, 自动同步, 跑步打卡',
     canonical: 'https://s.xhy6.com/',
