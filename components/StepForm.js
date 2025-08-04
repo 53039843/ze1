@@ -40,7 +40,7 @@ const StepForm = ({
     >
       <div className="card-header">
         <Title level={2} className="glass-title">步数修改</Title>
-        <Text className="glass-subtitle">立即更新您的 Zepp Life 步数信息</Text>
+        <Text className="glass-subtitle">立即修改您的微信运动步数，抢占排行榜！~</Text>
       </div>
 
       <Form
