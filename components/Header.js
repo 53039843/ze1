@@ -33,7 +33,7 @@ const Header = ({ onShowSettings, onShowHelp, streak }) => {
               }}
             >
               <img 
-                src="https://wp.23-4.cn/view.php/232ae078627a9a29f2b2ce12dbb90706.jpg" 
+                src="https://ol.xhy6.com/ybxjg.png" 
                 alt="Zepp Life" 
                 className="logo-image" 
                 onError={(e) => {
