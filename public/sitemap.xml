@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ze1.hpny.shop/</loc>
+    <loc>https://s.hpny.shop/</loc>
+    <lastmod>2025-08-4</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+    <loc>https://ze.hpny.shop/</loc>
+    <lastmod>2025-08-4</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+      <loc>https://d.shuabu.mobi/</loc>
+    <lastmod>2025-08-4</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+      <loc>https://c.shuabu.mobi/</loc>
     <lastmod>2025-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+      <loc>https://b.shuabu.mobi/</loc>
+    <lastmod>2025-08-4</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+      <loc>https://a.shuabu.mobi/</loc>
+    <lastmod>2025-08-4</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
