@@ -93,7 +93,15 @@ const StepForm = ({
             <Form.Item
               name="steps"
               className="step-input"
-              rules={useRandom ? [] : [{ required: true, message: '请输入步数!' }]}
+              rules={useRandom ? [] : [{ required: true, message: '请输入步数!' },
+                ({
+                  validator(_, value) {
+                    if (!value || value <= 20000) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('步数超过2万，请前往会员版使用'));
+                  },
+                })]}
             >
               <Input
                 className="glass-input"
@@ -131,7 +139,7 @@ const StepForm = ({
               <Slider
                 range
                 min={100}
-                max={100000}
+                max={20000}
                 defaultValue={randomRange}
                 onChange={setRandomRange}
                 className="glass-slider"
