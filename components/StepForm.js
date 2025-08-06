@@ -102,7 +102,7 @@ const StepForm = ({
                       return Promise.resolve();
                     }
                     setShowPremiumButton(true);
-                    return Promise.reject(new Error("步数超过2万，请前往会员版使用"));
+                    return Promise.reject(new Error("步数超过2万，请前往会员版使用哦~"));
                   },
                 })]}
             >
