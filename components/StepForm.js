@@ -21,16 +21,17 @@ import { motion } from 'framer-motion';
 
 const { Text, Title } = Typography;
 
-const StepForm = ({ 
-  form, 
-  onFinish, 
-  loading, 
-  randomRange, 
-  setRandomRange, 
-  useRandom, 
-  setUseRandom, 
-  generateRandomSteps 
+const StepForm = ({
+  form,
+  onFinish,
+  loading,
+  randomRange,
+  setRandomRange,
+  useRandom,
+  setUseRandom,
+  generateRandomSteps
 }) => {
+  const [showPremiumButton, setShowPremiumButton] = useState(false);
   return (
     <motion.div
       className="step-form-container glass-card"
@@ -97,9 +98,11 @@ const StepForm = ({
                 ({
                   validator(_, value) {
                     if (!value || value <= 20000) {
+                      setShowPremiumButton(false);
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('步数超过2万，请前往会员版使用'));
+                    setShowPremiumButton(true);
+                    return Promise.reject(new Error("步数超过2万，请前往会员版使用"));
                   },
                 })]}
             >
@@ -157,16 +160,27 @@ const StepForm = ({
         )}
 
         <Form.Item className="form-submit">
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="glass-button"
-            loading={loading}
-            icon={<FireOutlined />}
-            disabled={loading}
-          >
-            {loading ? '更新中...' : '立即更新步数'}
-          </Button>
+          <Space>
+            {showPremiumButton && (
+              <Button
+                type="default"
+                className="glass-button premium-button"
+                onClick={() => window.open('https://hy.xhy6.com', '_blank')}
+              >
+                前往会员版
+              </Button>
+            )}
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="glass-button"
+              loading={loading}
+              icon={<FireOutlined />}
+              disabled={loading}
+            >
+              {loading ? '更新中...' : '立即更新步数'}
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
     </motion.div>
