@@ -178,7 +178,7 @@ const StepForm = ({
               icon={<FireOutlined />}
               disabled={loading}
             >
-              {loading ? '刷步中...' : '提交刷步数'}
+              {loading ? '刷步中...' : '提交刷步'}
             </Button>
           </Space>
         </Form.Item>
