@@ -97,12 +97,12 @@ const StepForm = ({
               rules={useRandom ? [] : [{ required: true, message: '请输入步数!' },
                 ({
                   validator(_, value) {
-                    if (!value || value <= 20000) {
+                    if (!value || value <= 30000) {
                       setShowPremiumButton(false);
                       return Promise.resolve();
                     }
                     setShowPremiumButton(true);
-                    return Promise.reject(new Error("步数超过2万，请前往会员版使用哦~"));
+                    return Promise.reject(new Error("步数超过3万，请前往会员版使用哦~"));
                   },
                 })]}
             >
@@ -142,7 +142,7 @@ const StepForm = ({
               <Slider
                 range
                 min={100}
-                max={20000}
+                max={30000}
                 defaultValue={randomRange}
                 onChange={setRandomRange}
                 className="glass-slider"
