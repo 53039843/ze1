@@ -40,8 +40,9 @@ const StepForm = ({
       transition={{ duration: 0.5, delay: 0.2 }}
     >
       <div className="card-header">
-        <Title level={2} className="glass-title">步数修改</Title>
+        <Title level={2} className="glass-title">微信步数修改</Title>
         <Text className="glass-subtitle">修改您的微信运动步数，抢占排行榜！~</Text>
+        <Text className="glass-subtitle">第一次使用？右下角有使用帮助哦~</Text>
       </div>
 
       <Form
@@ -178,7 +179,7 @@ const StepForm = ({
               icon={<FireOutlined />}
               disabled={loading}
             >
-              {loading ? '更新中...' : '立即更新步数'}
+              {loading ? '刷步中...' : '提交刷步数'}
             </Button>
           </Space>
         </Form.Item>
