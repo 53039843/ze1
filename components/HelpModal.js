@@ -27,11 +27,12 @@ const HelpModal = ({ visible, onClose }) => {
               本工具可以帮助您更新 Zepp Life (原小米运动) 的步数数据，使用方法如下：
             </Paragraph>
             <ol className="help-list">
-              <li>输入您的小米账号（可以是手机号、邮箱或用户名）</li>
-              <li>输入对应的密码</li>
-              <li>输入您想要设置的步数（或启用随机步数功能）</li>
-              <li>点击"立即更新步数"按钮</li>
-              <li>等待系统处理，成功后将显示结果</li>
+              <li>1、在应用商店中下载【Zepp Life】app</li>
+              <li>打开软件并选择'没有账号立即注册'</li>
+              <li>一定要新注册 不能用小米手机的账号</li>
+              <li>2、进入"Zepp Life"app，依次点击:</li>
+              <li>我的->第三方接入->绑定你想同步数据的平台。</li>
+              <li>3、最后登陆此刷步系统进行刷步~.</li>
             </ol>
           </Panel>
           
