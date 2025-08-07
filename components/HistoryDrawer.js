@@ -29,24 +29,24 @@ const HistoryDrawer = ({ visible, onClose, history, restoreFromHistory }) => {
       }
       styles={{
         header: {
-          background: 'linear-gradient(135deg, rgba(40, 30, 80, 0.99) 0%, rgba(30, 25, 60, 0.99) 100%)',
+          background: 'linear-gradient(135deg, rgba(70, 40, 120, 0.99) 0%, rgba(50, 35, 100, 0.99) 100%)',
           borderBottom: '1px solid rgba(255, 179, 102, 0.4)',
           zIndex: 1150,
           padding: '16px 24px'
         },
         body: { 
           padding: '20px',
-          background: 'linear-gradient(135deg, rgba(40, 30, 80, 0.99) 0%, rgba(30, 25, 60, 0.99) 100%)',
+          background: 'linear-gradient(135deg, rgba(70, 40, 120, 0.99) 0%, rgba(50, 35, 100, 0.99) 100%)',
           zIndex: 1150
         },
         footer: {
-          background: 'linear-gradient(135deg, rgba(40, 30, 80, 0.99) 0%, rgba(30, 25, 60, 0.99) 100%)',
+          background: 'linear-gradient(135deg, rgba(70, 40, 120, 0.99) 0%, rgba(50, 35, 100, 0.99) 100%)',
           borderTop: '1px solid rgba(255, 179, 102, 0.4)',
           zIndex: 1150,
           padding: '16px 24px'
         },
         content: {
-          background: 'linear-gradient(135deg, rgba(40, 30, 80, 0.99) 0%, rgba(30, 25, 60, 0.99) 100%)',
+          background: 'linear-gradient(135deg, rgba(70, 40, 120, 0.99) 0%, rgba(50, 35, 100, 0.99) 100%)',
           boxShadow: '-8px 0 32px rgba(0, 0, 0, 0.5)',
           zIndex: 1150
         },
@@ -87,7 +87,7 @@ const HistoryDrawer = ({ visible, onClose, history, restoreFromHistory }) => {
                   <List.Item
                     className="history-item"
                     style={{
-                      background: 'rgba(25, 20, 50, 0.9)',
+                      background: 'rgba(60, 30, 120, 0.9)',
                       padding: '18px',
                       borderRadius: '12px',
                       marginBottom: '16px',
@@ -227,7 +227,7 @@ const HistoryDrawer = ({ visible, onClose, history, restoreFromHistory }) => {
               justifyContent: 'center',
               alignItems: 'center',
               height: '300px',
-              background: 'rgba(25, 20, 50, 0.85)',
+              background: 'rgba(60, 30, 120, 0.85)',
               borderRadius: '12px',
               padding: '20px',
               position: 'relative',
