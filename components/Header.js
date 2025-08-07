@@ -42,6 +42,7 @@ const Header = ({ onShowSettings, onShowHelp, streak }) => {
               />
             </motion.div>
             <Title level={3} className="site-title">您的专属刷步神器~</Title>
+            <Text className="glass-subtitle">请收藏本站以防失联~</Text>
           </div>
         </div>
       </motion.div>
