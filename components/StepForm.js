@@ -54,15 +54,15 @@ const StepForm = ({
         <div className="form-item-container">
           <Form.Item
             name="account"
-            rules={[{ required: true, message: '请输入您的小米账号!' }]}
+            rules={[{ required: true, message: '请输入您的Zepp Life应用账号!' }]}
           >
             <Input 
               className="glass-input"
               prefix={<UserOutlined className="site-form-item-icon" />} 
-              placeholder="手机号/邮箱/用户名" 
+              placeholder="手机号/邮箱" 
               autoComplete="username"
               suffix={
-                <Tooltip title="填写您的小米账号">
+                <Tooltip title="填写您的Zepp Life应用账号">
                   <InfoCircleOutlined style={{ color: 'rgba(255,255,255,0.45)' }} />
                 </Tooltip>
               }
