@@ -19,7 +19,7 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-left">
           <Text className="copyright">
-            © {currentYear} 京IPC备7000001-6号
+            © {currentYear} 京IPC备7000002-6号
           </Text>
           <Space className="footer-links">
             <Link href="https://ol.xhy6.com/" target="_blank" className="footer-link">
@@ -55,7 +55,7 @@ const Footer = () => {
       
       <div className="footer-disclaimer">
         <Text type="secondary" className="disclaimer-text">
-          免责声明：本工具仅供学习研究，使用本工具所产生的任何后果由使用者自行承担
+          免责声明：本工具仅供学习研究
         </Text>
       </div>
     </motion.div>
