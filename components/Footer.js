@@ -22,12 +22,22 @@ const Footer = () => {
             © {currentYear} 京IPC备7000002-6号
           </Text>
           <Space className="footer-links">
-            <Link href="https://ol.xhy6.com/" target="_blank" className="footer-link">
+            <Button 
+              type="link" 
+              href="https://ol.xhy6.com/" 
+              target="_blank" 
+              className="footer-link"
+            >
               全自动会员版
-            </Link>
-            <Link href="https://qm.qq.com/q/pnDAFtRpo4" target="_blank" className="footer-link">
+            </Button>
+            <Button 
+              type="link" 
+              href="https://qm.qq.com/q/pnDAFtRpo4" 
+              target="_blank" 
+              className="footer-link"
+            >
               进群获取教程
-            </Link>
+            </Button>
           </Space>
         </div>
         
@@ -62,4 +72,4 @@ const Footer = () => {
   );
 };
 
-export default Footer; 
+export default Footer;
