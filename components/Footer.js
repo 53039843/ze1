@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Space, Button, Tooltip, Image } from 'antd';
-import { GithubOutlined, HeartOutlined, WechatOutlined } from '@ant-design/icons';
+import { GithubOutlined, HeartOutlined, WechatOutlined, HomeOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import NextLink from 'next/link';
 
@@ -32,6 +32,14 @@ const Footer = () => {
               onClick={() => window.open('https://qm.qq.com/q/pnDAFtRpo4', '_blank')}
             >
               进群获取教程
+            </Button>
+            <Button
+              type="default"
+              className="glass-button"
+              icon={<HomeOutlined />}
+              onClick={() => window.open('https://www.shuabu.mobi', '_blank')}
+            >
+              回到首页
             </Button>
           </Space>
         </div>
