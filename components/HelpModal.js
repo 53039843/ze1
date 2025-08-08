@@ -24,15 +24,15 @@ const HelpModal = ({ visible, onClose }) => {
         <Collapse bordered={false} ghost className="help-collapse">
 <Panel header={<div className="panel-header"><InfoCircleOutlined /> 如何使用本工具</div>} key="1">
   <Paragraph className="help-paragraph">
-    本工具可以帮助您更新 Zepp Life (原小米运动) 的步数数据，使用方法如下：
+    本工具可以帮助您更新 Zepp Life应用 (原小米运动app) 的步数数据，使用方法如下：
   </Paragraph>
   <ol className="help-list">
-    <li>1、在应用商店中下载【Zepp Life】app</li>
-    <li>2、打开软件并选择'没有账号立即注册'</li>
-    <li>3、一定要新注册，不能用小米手机的账号</li>
-    <li>4、进入"Zepp Life"app，依次点击:</li>
-    <li>5、我的-第三方接入-绑定你想同步数据的平台。</li>
-    <li>6、最后登陆此刷步系统进行刷步~.</li>
+    <li>在应用商店中下载【Zepp Life】app</li>
+    <li>打开软件并选择'没有账号立即注册'</li>
+    <li>一定要新注册，不能用小米手机的账号</li>
+    <li>进入"Zepp Life"app，依次点击:</li>
+    <li>我的-第三方接入-绑定你想同步数据的平台。</li>
+    <li>最后登陆此刷步系统进行刷步~.</li>
   </ol>
 </Panel>
           
