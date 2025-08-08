@@ -18,23 +18,18 @@ const Footer = () => {
     >
       <div className="footer-content">
         <div className="footer-left">
-          <Text className="copyright">
-            © {currentYear} 京IPC备7000002-6号
-          </Text>
           <Space className="footer-links">
-            <Button 
-              type="link" 
-              href="https://ol.xhy6.com/" 
-              target="_blank" 
-              className="footer-link"
+            <Button
+              type="default"
+              className="glass-button premium-button"
+              onClick={() => window.open('https://ol.xhy6.com/', '_blank')}
             >
               全自动会员版
             </Button>
-            <Button 
-              type="link" 
-              href="https://qm.qq.com/q/pnDAFtRpo4" 
-              target="_blank" 
-              className="footer-link"
+            <Button
+              type="primary"
+              className="glass-button"
+              onClick={() => window.open('https://qm.qq.com/q/pnDAFtRpo4', '_blank')}
             >
               进群获取教程
             </Button>
@@ -67,6 +62,17 @@ const Footer = () => {
         <Text type="secondary" className="disclaimer-text">
           免责声明：本工具仅供学习研究
         </Text>
+      </div>
+      
+      <div className="footer-bottom">
+        <div className="footer-copyright">
+          <Text className="copyright">
+            © {currentYear} 版权所有
+          </Text>
+          <Text className="icp-info">
+            京IPC备7000002-6号
+          </Text>
+        </div>
       </div>
     </motion.div>
   );
