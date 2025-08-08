@@ -26,7 +26,7 @@ const Footer = () => {
               全自动会员版
             </Link>
             <Link href="https://qm.qq.com/q/pnDAFtRpo4" target="_blank" className="footer-link">
-              问题反馈
+              进群获取教程
             </Link>
           </Space>
         </div>
