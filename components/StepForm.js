@@ -41,7 +41,7 @@ const StepForm = ({
     >
       <div className="card-header">
         <Title level={2} className="glass-title">微信步数修改</Title>
-        <Text className="glass-subtitle"><span style={{ color: 'gold' }}>修改您的微信运动步数，抢占排行榜！~</span><br />第一次使用查看右下角使用帮助哦~</Text>
+        <Text className="glass-subtitle"><span style={{ color: 'gold' }}>修改您的微信运动步数，抢占排行榜！~</span><br />第一次使用请看底部使用帮助哦~</Text>
       </div>
 
       <Form
