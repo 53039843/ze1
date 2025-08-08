@@ -24,14 +24,14 @@ const Footer = () => {
               className="glass-button premium-button"
               onClick={() => window.open('https://ol.xhy6.com/', '_blank')}
             >
-              全自动会员版
+              会员站
             </Button>
             <Button
               type="primary"
               className="glass-button"
               onClick={() => window.open('https://qm.qq.com/q/pnDAFtRpo4', '_blank')}
             >
-              进群获取教程
+              获取教程
             </Button>
             <Button
               type="default"
@@ -39,7 +39,7 @@ const Footer = () => {
               icon={<HomeOutlined />}
               onClick={() => window.open('https://www.shuabu.mobi', '_blank')}
             >
-              回到首页
+              回首页
             </Button>
           </Space>
         </div>
