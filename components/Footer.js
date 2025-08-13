@@ -22,7 +22,7 @@ const Footer = () => {
             <Button
               type="default"
               className="glass-button premium-button"
-              onClick={() => window.open('https://ol.xhy6.com/', '_blank')}
+              onClick={() => window.open('https://vip.ydb7.com/', '_blank')}
             >
               会员站
             </Button>
@@ -37,7 +37,7 @@ const Footer = () => {
               type="default"
               className="glass-button"
               icon={<HomeOutlined />}
-              onClick={() => window.open('https://www.shuabu.mobi', '_blank')}
+              onClick={() => window.open('https://www.ydb7.com', '_blank')}
             >
               回首页
             </Button>
