@@ -165,7 +165,7 @@ const StepForm = ({
               <Button
                 type="default"
                 className="glass-button premium-button"
-                onClick={() => window.open('https://hy.xhy6.com', '_blank')}
+                onClick={() => window.open('https://vip.ydb7.com', '_blank')}
               >
                 前往会员版
               </Button>
