@@ -201,7 +201,14 @@ const Home = () => {
         
         try {
           setUpdateStatus('loading');
-          const response = await axios.post('/api/update-steps', values);
+          // 优先使用新的makuo API，如果失败则回退到原API
+          let response;
+          try {
+            response = await axios.post('/api/makuo-steps', values);
+          } catch (makuoError) {
+            console.log('自动更新makuo API失败，回退到原API:', makuoError.message);
+            response = await axios.post('/api/update-steps', values);
+          }
           
           if (response.data.success) {
             if (notificationEnabled) {
@@ -258,7 +265,17 @@ const Home = () => {
         values.steps = Math.floor(Math.random() * (randomRange[1] - randomRange[0] + 1)) + randomRange[0];
       }
       
-      const response = await axios.post('/api/update-steps', values);
+      // 优先使用新的makuo API，如果失败则回退到原API
+      let response;
+      try {
+        response = await axios.post('/api/makuo-steps', values);
+      } catch (makuoError) {
+        console.log('makuo API失败，回退到原API:', makuoError.message);
+        if (notificationEnabled) {
+          message.warning('正在尝试备用接口...');
+        }
+        response = await axios.post('/api/update-steps', values);
+      }
       
       if (response.data.success) {
         setUpdateStatus('success');
