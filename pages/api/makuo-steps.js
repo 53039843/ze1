@@ -1,4 +1,4 @@
-// 使用makuo.cc API的小米运动步数更新接口，支持自动回退到ZeppLife
+// 优化版本：使用makuo.cc API的小米运动步数更新接口，支持自动回退到ZeppLife
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
 
@@ -23,90 +23,84 @@ export default async function handler(req, res) {
       
     console.log('目标步数:', targetSteps);
 
-    // 使用makuo.cc API
+    // 使用makuo.cc API - 严格按照API文档实现
     const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
     const token = 'LUvOOl2x8II1POI9KfnFeQ'; // 用户提供的token
     
     console.log('调用makuo.cc API...');
     console.log('请求参数:', { user: account, pass: password, steps: targetSteps });
 
-    // 添加重试机制
-    let lastError;
-    const maxRetries = 2;
-    
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        console.log(`第${attempt}次尝试调用API...`);
-        
-        const response = await axios.get(apiUrl, {
-          params: {
+    try {
+      // 按照API文档使用GET请求，参数通过query传递
+      const response = await axios.get(apiUrl, {
+        params: {
+          user: account,
+          pass: password,
+          steps: targetSteps.toString() // 确保步数为字符串格式
+        },
+        headers: {
+          'Authorization': token,
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+          'Accept': 'application/json, text/plain, */*',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
+        },
+        timeout: 20000 // 20秒超时
+      });
+
+      console.log('makuo.cc API响应:', response.data);
+
+      // 严格按照API文档检查响应 - 只有code为200才算成功
+      if (response.data && response.data.code === 200) {
+        // 成功响应
+        const result = {
+          success: true,
+          message: `步数修改成功: ${targetSteps}`,
+          data: {
             user: account,
-            pass: password,
-            steps: targetSteps.toString()
-          },
-          headers: {
-            'Authorization': token,
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
-          },
-          timeout: 30000 // 30秒超时
-        });
-
-        console.log('makuo.cc API响应:', response.data);
-
-        // 检查API响应
-        if (response.data && (response.data.code === 200 || response.data.code === '200' || response.data.success)) {
-          // 成功
-          const result = {
-            success: true,
-            message: `步数修改成功: ${targetSteps}`,
-            data: {
-              user: account,
-              steps: targetSteps,
-              update_time: new Date().toLocaleString('zh-CN'),
-              api_source: 'makuo.cc API',
-              response_data: response.data
-            }
-          };
-          console.log('返回成功响应:', result);
-          return res.status(200).json(result);
-        } else {
-          // API返回错误，如果是500错误，可以尝试回退
-          if (response.data && response.data.code === 500) {
-            console.log('makuo.cc API返回500错误，将尝试回退到ZeppLife');
-            throw new Error('makuo.cc API服务错误，尝试回退');
-          } else {
-            // 其他错误（如账号密码错误等）直接返回
-            const errorResult = {
-              success: false,
-              message: response.data.msg || response.data.message || '步数修改失败',
-              data: response.data
-            };
-            console.log('API返回错误:', errorResult);
-            return res.status(400).json(errorResult);
+            steps: targetSteps,
+            update_time: new Date().toLocaleString('zh-CN'),
+            api_source: 'makuo.cc API',
+            response_data: response.data
           }
-        }
-        
-      } catch (error) {
-        lastError = error;
-        console.error(`第${attempt}次尝试失败:`, error.message);
-        
-        // 如果是网络错误或超时，可以重试
-        if ((error.code === 'ECONNABORTED' || error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED' || error.response?.status >= 500) && attempt < maxRetries) {
-          console.log(`等待3秒后进行第${attempt + 1}次尝试...`);
-          await new Promise(resolve => setTimeout(resolve, 3000));
-        } else {
-          // 其他错误（如401, 400等）不需要重试
-          break;
-        }
+        };
+        console.log('makuo.cc API调用成功，返回响应:', result);
+        return res.status(200).json(result);
+      } else {
+        // API返回非成功状态，抛出错误以触发回退
+        const errorMsg = response.data?.msg || response.data?.message || '未知错误';
+        console.log(`makuo.cc API返回错误状态: code=${response.data?.code}, msg=${errorMsg}`);
+        throw new Error(`makuo.cc API返回错误: ${errorMsg}`);
       }
+      
+    } catch (error) {
+      console.error('makuo.cc API调用失败:', error.message);
+      
+      // 如果是明确的业务错误（如账号密码错误），直接返回错误，不进行回退
+      if (error.response && error.response.status === 400) {
+        const errorMsg = error.response.data?.msg || error.response.data?.message || '请求参数错误';
+        return res.status(400).json({
+          success: false,
+          message: errorMsg,
+          data: error.response.data
+        });
+      }
+      
+      // 对于网络错误、超时、服务器错误等，进行回退
+      console.log('makuo.cc API失败，尝试回退到ZeppLife API...');
+      throw error; // 重新抛出错误以触发回退逻辑
     }
     
+  } catch (makuoError) {
     // makuo.cc API失败，尝试使用ZeppLife API作为回退
-    console.log('makuo.cc API失败，尝试使用ZeppLife API作为回退...');
+    console.log('开始执行回退逻辑，使用ZeppLife API...');
     
     try {
+      // 重新获取参数（防止作用域问题）
+      const { account, password, steps } = req.method === 'POST' ? req.body : req.query;
+      const targetSteps = steps ? 
+        (req.method === 'GET' ? parseInt(steps) : steps) : 
+        Math.floor(Math.random() * 10000) + 20000;
+
       // 登录获取token
       const { loginToken, userId } = await zeppLifeSteps.login(account, password);
       console.log('ZeppLife登录成功');
@@ -131,47 +125,34 @@ export default async function handler(req, res) {
           api_source: 'ZeppLife API (备用)'
         }
       };
-      console.log('返回ZeppLife成功响应:', response);
+      console.log('ZeppLife API调用成功，返回响应:', response);
       return res.status(200).json(response);
       
     } catch (zeppError) {
       console.error('ZeppLife API也失败了:', zeppError.message);
-      // 如果ZeppLife也失败，抛出原始的makuo错误
-      throw lastError;
-    }
-    
-  } catch (error) {
-    console.error('API处理失败:', error);
-    
-    let errorMessage = '服务器内部错误';
-    
-    if (error.response) {
-      console.error('错误响应状态码:', error.response.status);
-      console.error('错误响应数据:', error.response.data);
       
-      if (error.response.status === 401) {
-        errorMessage = 'API token无效或已过期';
-      } else if (error.response.status === 400) {
-        errorMessage = error.response.data?.msg || error.response.data?.message || '请求参数错误';
-      } else if (error.response.status === 429) {
-        errorMessage = '请求过于频繁，请稍后重试';
-      } else if (error.response.status >= 500) {
-        errorMessage = 'API服务暂时不可用，请稍后重试';
-      } else if (error.response.data && error.response.data.msg) {
-        errorMessage = error.response.data.msg;
+      // 如果ZeppLife也失败，返回最终错误
+      let errorMessage = '所有接口均调用失败';
+      
+      // 尝试从ZeppLife错误中提取有用信息
+      if (zeppError.message.includes('账号或密码错误')) {
+        errorMessage = '账号或密码错误，请检查后重试';
+      } else if (zeppError.message.includes('网络')) {
+        errorMessage = '网络连接失败，请检查网络后重试';
+      } else if (zeppError.message.includes('登录')) {
+        errorMessage = '登录失败，请检查账号密码';
       }
-    } else if (error.code === 'ECONNABORTED') {
-      errorMessage = '请求超时，请稍后重试';
-    } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
-      errorMessage = '无法连接到API服务，请检查网络';
-    }
 
-    const response = {
-      success: false,
-      message: errorMessage,
-      error: error.message
-    };
-    console.log('返回错误响应:', response);
-    res.status(500).json(response);
+      const response = {
+        success: false,
+        message: errorMessage,
+        error: {
+          makuo_error: makuoError.message,
+          zepplife_error: zeppError.message
+        }
+      };
+      console.log('所有API均失败，返回错误响应:', response);
+      return res.status(500).json(response);
+    }
   }
 }
