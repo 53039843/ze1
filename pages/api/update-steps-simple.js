@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       account: '',
       time: getCurrentTime(),
       steps: 0,
-      website: 'www.ydb7.com'
+      website: '官网：www.ydb7.com'
     });
   }
 
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
         account: account || '',
         time: getCurrentTime(),
         steps: 0,
-        website: 'www.ydb7.com'
+        website: '官网：www.ydb7.com'
       });
     }
 
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
           account: account,
           time: getCurrentTime(),
           steps: 0,
-          website: 'www.ydb7.com'
+          website: '官网：www.ydb7.com'
         });
       }
     } else {
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
           account: account,
           time: getCurrentTime(),
           steps: targetSteps,
-          website: 'www.ydb7.com'
+          website: '官网：www.ydb7.com'
         };
         
         return res.status(200).json(response);
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
           account: account,
           time: getCurrentTime(),
           steps: 0,
-          website: 'www.ydb7.com'
+          website: '官网：www.ydb7.com'
         });
       }
 
@@ -134,7 +134,7 @@ export default async function handler(req, res) {
         account: account,
         time: getCurrentTime(),
         steps: targetSteps,
-        website: 'www.ydb7.com'
+        website: '官网：www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -152,7 +152,7 @@ export default async function handler(req, res) {
         account: account,
         time: getCurrentTime(),
         steps: 0,
-        website: 'www.ydb7.com'
+        website: '官网：www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -171,7 +171,7 @@ export default async function handler(req, res) {
       account: req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
       time: getCurrentTime(),
       steps: 0,
-      website: 'www.ydb7.com'
+      website: '官网：www.ydb7.com'
     });
   }
 }

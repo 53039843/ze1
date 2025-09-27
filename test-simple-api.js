@@ -27,7 +27,7 @@ async function testSimpleAPI() {
         second: '2-digit'
       }),
       steps: testParams.steps,
-      website: 'www.ydb7.com'
+      website: '官网：www.ydb7.com'
     };
     
     console.log('期望的简洁格式返回:');

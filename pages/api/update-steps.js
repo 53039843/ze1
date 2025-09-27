@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         second: '2-digit'
       }),
       steps: 0,
-      website: 'www.ydb7.com'
+      website: '官网：www.ydb7.com'
     });
   }
 
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
           second: '2-digit'
         }),
         steps: 0,
-        website: 'www.ydb7.com'
+        website: '官网：www.ydb7.com'
       });
     }
 
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
             second: '2-digit'
           }),
           steps: 0,
-          website: 'www.ydb7.com'
+          website: '官网：www.ydb7.com'
         });
       }
     } else {
@@ -116,7 +116,7 @@ export default async function handler(req, res) {
             second: '2-digit'
           }),
           steps: targetSteps,
-          website: 'www.ydb7.com'
+          website: '官网：www.ydb7.com'
         };
         
         return res.status(200).json(response);
@@ -141,7 +141,7 @@ export default async function handler(req, res) {
             second: '2-digit'
           }),
           steps: 0,
-          website: 'www.ydb7.com'
+          website: '官网：www.ydb7.com'
         });
       }
 
@@ -182,7 +182,7 @@ export default async function handler(req, res) {
           second: '2-digit'
         }),
         steps: targetSteps,
-        website: 'www.ydb7.com'
+        website: '官网：www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -208,7 +208,7 @@ export default async function handler(req, res) {
           second: '2-digit'
         }),
         steps: 0,
-        website: 'www.ydb7.com'
+        website: '官网：www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -235,7 +235,7 @@ export default async function handler(req, res) {
         second: '2-digit'
       }),
       steps: 0,
-      website: 'www.ydb7.com'
+      website: '官网：www.ydb7.com'
     });
   }
 }

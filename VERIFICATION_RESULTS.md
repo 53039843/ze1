@@ -38,7 +38,7 @@
   "account": "tr00042@163.com",
   "time": "2025/09/27 09:43:19",
   "steps": 75383,
-  "website": "www.ydb7.com"
+  "website": "官网：www.ydb7.com"
 }
 ```
 
@@ -58,7 +58,7 @@
 | `account` | string | 用户账号 | "tr00042@163.com" |
 | `time` | string | 操作时间（中国时区） | "2025/09/27 09:43:19" |
 | `steps` | number | 设置的步数 | 75383 |
-| `website` | string | 官网地址 | "www.ydb7.com" |
+| `website` | string | 官网地址 | "官网：www.ydb7.com" |
 
 ## 兼容性保证
 
@@ -77,7 +77,7 @@
   "account": "tr00042@163.com", 
   "time": "2025/09/27 09:43:19",
   "steps": 0,
-  "website": "www.ydb7.com"
+  "website": "官网：www.ydb7.com"
 }
 ```
 
