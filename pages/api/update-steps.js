@@ -114,11 +114,15 @@ export default async function handler(req, res) {
       const result = await zeppLifeSteps.updateSteps(loginToken, appToken, targetSteps);
       console.log(`[${requestId}] 步数更新结果:`, result);
 
-      // 返回结果 - 保持原有格式
+      // 返回结果 - 简化格式
       const response = {
         success: true,
         message: `步数修改成功: ${targetSteps}`,
-        data: result
+        data: {
+          steps: targetSteps,
+          update_time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
+          api_source: 'www.ydb7.com'
+        }
       };
       
       const duration = Date.now() - startTime;
@@ -207,19 +211,14 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       };
     }
 
-    // 成功响应 - 转换为原有数据格式
+    // 成功响应 - 简化数据格式
     return {
       success: true,
       message: `步数修改成功: ${targetSteps}`,
       data: {
-        // 保持与ZeppLife API相似的数据结构
-        user: account,
         steps: targetSteps,
         update_time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
-        api_source: 'makuo.cc API',
-        userid: response.data.data?.userid,
-        // 保留原始响应数据
-        makuo_response: response.data
+        api_source: 'www.ydb7.com'
       }
     };
 
