@@ -15,9 +15,9 @@ async function testSimpleAPI() {
     
     // 模拟API调用
     const mockResponse = {
-      '刷步状态': '成功',
-      '账号': testParams.account,
-      '时间': new Date().toLocaleString('zh-CN', { 
+      "刷步状态": "成功",
+      "账号": testParams.account,
+      "时间": new Date().toLocaleString('zh-CN', { 
         timeZone: 'Asia/Shanghai',
         year: 'numeric',
         month: '2-digit',
@@ -26,8 +26,8 @@ async function testSimpleAPI() {
         minute: '2-digit',
         second: '2-digit'
       }),
-      '步数': testParams.steps,
-      '官网': 'www.ydb7.com'
+      "步数": testParams.steps,
+      "官网": "www.ydb7.com"
     };
     
     console.log('期望的简洁格式返回:');

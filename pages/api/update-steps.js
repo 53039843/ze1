@@ -1,11 +1,11 @@
-// 优化版本：对接makuo.cc API，保持原有返回格式不变
+// 标准格式API接口：返回美观的一行一个值格式
+// 官网：www.ydb7.com
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
 
 /**
- * 小米运动步数更新API处理器
- * 优先使用makuo.cc API，失败时自动回退到ZeppLife API
- * 保持与原有update-steps.js完全相同的返回格式
+ * 标准格式的步数更新API处理器
+ * 返回格式：一行一个值，美观易读
  */
 export default async function handler(req, res) {
   // 设置CORS头部
@@ -20,21 +20,7 @@ export default async function handler(req, res) {
 
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
-    return res.status(405).json({ 
-      '刷步状态': '失败',
-      '账号': '',
-      '时间': new Date().toLocaleString('zh-CN', { 
-        timeZone: 'Asia/Shanghai',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      }),
-      '步数': 0,
-      '官网': 'www.ydb7.com'
-    });
+    return res.status(405).json(createStandardResponse('失败', '', 0));
   }
 
   const startTime = Date.now();
@@ -48,21 +34,7 @@ export default async function handler(req, res) {
     // 参数验证
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
-      return res.status(400).json({ 
-        '刷步状态': '失败',
-        '账号': account || '',
-        '时间': new Date().toLocaleString('zh-CN', { 
-          timeZone: 'Asia/Shanghai',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        '步数': 0,
-        '官网': 'www.ydb7.com'
-      });
+      return res.status(400).json(createStandardResponse('失败', account || '', 0));
     }
 
     // 处理步数参数
@@ -71,21 +43,7 @@ export default async function handler(req, res) {
       targetSteps = parseInt(steps, 10);
       if (isNaN(targetSteps) || targetSteps < 0 || targetSteps > 100000) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
-        return res.status(400).json({
-          '刷步状态': '失败',
-          '账号': account,
-          '时间': new Date().toLocaleString('zh-CN', { 
-            timeZone: 'Asia/Shanghai',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          '步数': 0,
-          '官网': 'www.ydb7.com'
-        });
+        return res.status(400).json(createStandardResponse('失败', account, 0));
       }
     } else {
       // 生成合理范围内的随机步数
@@ -102,24 +60,8 @@ export default async function handler(req, res) {
         const duration = Date.now() - startTime;
         console.log(`[${requestId}] makuo.cc API调用成功，耗时: ${duration}ms`);
         
-        // 转换为中文简洁格式
-        const response = {
-          '刷步状态': '成功',
-          '账号': account,
-          '时间': new Date().toLocaleString('zh-CN', { 
-            timeZone: 'Asia/Shanghai',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          '步数': targetSteps,
-          '官网': 'www.ydb7.com'
-        };
-        
-        return res.status(200).json(response);
+        // 返回标准格式
+        return res.status(200).json(createStandardResponse('成功', account, targetSteps));
       }
 
       // makuo.cc API失败，检查是否应该回退
@@ -128,21 +70,7 @@ export default async function handler(req, res) {
       // 如果是明确的业务错误（如账号密码错误），不进行回退
       if (makuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退，直接返回错误`);
-        return res.status(500).json({
-          '刷步状态': '失败',
-          '账号': account,
-          '时间': new Date().toLocaleString('zh-CN', { 
-            timeZone: 'Asia/Shanghai',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          '步数': 0,
-          '官网': 'www.ydb7.com'
-        });
+        return res.status(500).json(createStandardResponse('失败', account, 0));
       }
 
     } catch (makuoError) {
@@ -168,76 +96,51 @@ export default async function handler(req, res) {
       const result = await zeppLifeSteps.updateSteps(loginToken, appToken, targetSteps);
       console.log(`[${requestId}] 步数更新结果:`, result);
 
-      // 返回结果 - 中文简洁格式
-      const response = {
-        '刷步状态': '成功',
-        '账号': account,
-        '时间': new Date().toLocaleString('zh-CN', { 
-          timeZone: 'Asia/Shanghai',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        '步数': targetSteps,
-        '官网': 'www.ydb7.com'
-      };
-      
+      // 返回标准格式
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] ZeppLife API调用成功，总耗时: ${duration}ms`);
-      console.log(`[${requestId}] 返回响应:`, response);
       
-      return res.status(200).json(response);
+      return res.status(200).json(createStandardResponse('成功', account, targetSteps));
       
     } catch (zeppError) {
       console.error(`[${requestId}] ZeppLife API调用失败:`, zeppError.message);
       
-      // 返回错误 - 中文简洁格式
-      const response = {
-        '刷步状态': '失败',
-        '账号': account,
-        '时间': new Date().toLocaleString('zh-CN', { 
-          timeZone: 'Asia/Shanghai',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        '步数': 0,
-        '官网': 'www.ydb7.com'
-      };
-      
+      // 返回错误 - 标准格式
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] 所有API均失败，总耗时: ${duration}ms`);
-      console.log(`[${requestId}] 返回错误响应:`, response);
       
-      return res.status(500).json(response);
+      return res.status(500).json(createStandardResponse('失败', account, 0));
     }
 
   } catch (error) {
     const duration = Date.now() - startTime;
     console.error(`[${requestId}] 请求处理失败，耗时: ${duration}ms`, error);
     
-    return res.status(500).json({
-      '刷步状态': '失败',
-      '账号': req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
-      '时间': new Date().toLocaleString('zh-CN', { 
-        timeZone: 'Asia/Shanghai',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      }),
-      '步数': 0,
-      '官网': 'www.ydb7.com'
-    });
+    return res.status(500).json(createStandardResponse('失败', req.method === 'POST' ? req.body?.account || '' : req.query?.account || '', 0));
   }
+}
+
+/**
+ * 创建标准格式的响应
+ */
+function createStandardResponse(status, account, steps) {
+  const currentTime = new Date().toLocaleString('zh-CN', { 
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+
+  return {
+    "刷步状态": status,
+    "账号": account,
+    "时间": currentTime,
+    "步数": steps,
+    "官网": "www.ydb7.com"
+  };
 }
 
 /**
@@ -293,7 +196,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       };
     }
 
-    // 成功响应 - 简洁格式
+    // 成功响应
     return {
       success: true,
       data: response.data
@@ -334,4 +237,4 @@ function isBusinessError(errorMsg) {
  */
 function generateRequestId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-} 
+}
