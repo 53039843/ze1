@@ -21,8 +21,11 @@ export default async function handler(req, res) {
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
     return res.status(405).json({ 
-      success: false, 
-      message: '方法不允许' 
+      success: false,
+      account: '',
+      time: getCurrentTime(),
+      steps: 0,
+      website: 'www.ydb7.com'
     });
   }
 
@@ -42,7 +45,7 @@ export default async function handler(req, res) {
         account: account || '',
         time: getCurrentTime(),
         steps: 0,
-        message: '账号和密码不能为空' 
+        website: 'www.ydb7.com'
       });
     }
 
@@ -57,7 +60,7 @@ export default async function handler(req, res) {
           account: account,
           time: getCurrentTime(),
           steps: 0,
-          message: '步数必须是0-100000之间的有效数字'
+          website: 'www.ydb7.com'
         });
       }
     } else {
@@ -80,7 +83,8 @@ export default async function handler(req, res) {
           success: true,
           account: account,
           time: getCurrentTime(),
-          steps: targetSteps
+          steps: targetSteps,
+          website: 'www.ydb7.com'
         };
         
         return res.status(200).json(response);
@@ -97,7 +101,7 @@ export default async function handler(req, res) {
           account: account,
           time: getCurrentTime(),
           steps: 0,
-          message: makuoResult.message
+          website: 'www.ydb7.com'
         });
       }
 
@@ -129,7 +133,8 @@ export default async function handler(req, res) {
         success: true,
         account: account,
         time: getCurrentTime(),
-        steps: targetSteps
+        steps: targetSteps,
+        website: 'www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -147,7 +152,7 @@ export default async function handler(req, res) {
         account: account,
         time: getCurrentTime(),
         steps: 0,
-        message: zeppError.message || '服务器内部错误'
+        website: 'www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -166,7 +171,7 @@ export default async function handler(req, res) {
       account: req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
       time: getCurrentTime(),
       steps: 0,
-      message: error.message || '服务器内部错误'
+      website: 'www.ydb7.com'
     });
   }
 }

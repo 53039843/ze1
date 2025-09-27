@@ -26,7 +26,8 @@ async function testSimpleAPI() {
         minute: '2-digit',
         second: '2-digit'
       }),
-      steps: testParams.steps
+      steps: testParams.steps,
+      website: 'www.ydb7.com'
     };
     
     console.log('期望的简洁格式返回:');

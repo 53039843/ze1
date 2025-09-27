@@ -21,8 +21,19 @@ export default async function handler(req, res) {
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
     return res.status(405).json({ 
-      success: false, 
-      message: '方法不允许' 
+      success: false,
+      account: '',
+      time: new Date().toLocaleString('zh-CN', { 
+        timeZone: 'Asia/Shanghai',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      }),
+      steps: 0,
+      website: 'www.ydb7.com'
     });
   }
 
@@ -49,7 +60,8 @@ export default async function handler(req, res) {
           minute: '2-digit',
           second: '2-digit'
         }),
-        steps: 0
+        steps: 0,
+        website: 'www.ydb7.com'
       });
     }
 
@@ -71,7 +83,8 @@ export default async function handler(req, res) {
             minute: '2-digit',
             second: '2-digit'
           }),
-          steps: 0
+          steps: 0,
+          website: 'www.ydb7.com'
         });
       }
     } else {
@@ -102,7 +115,8 @@ export default async function handler(req, res) {
             minute: '2-digit',
             second: '2-digit'
           }),
-          steps: targetSteps
+          steps: targetSteps,
+          website: 'www.ydb7.com'
         };
         
         return res.status(200).json(response);
@@ -126,7 +140,8 @@ export default async function handler(req, res) {
             minute: '2-digit',
             second: '2-digit'
           }),
-          steps: 0
+          steps: 0,
+          website: 'www.ydb7.com'
         });
       }
 
@@ -166,7 +181,8 @@ export default async function handler(req, res) {
           minute: '2-digit',
           second: '2-digit'
         }),
-        steps: targetSteps
+        steps: targetSteps,
+        website: 'www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -191,7 +207,8 @@ export default async function handler(req, res) {
           minute: '2-digit',
           second: '2-digit'
         }),
-        steps: 0
+        steps: 0,
+        website: 'www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -217,7 +234,8 @@ export default async function handler(req, res) {
         minute: '2-digit',
         second: '2-digit'
       }),
-      steps: 0
+      steps: 0,
+      website: 'www.ydb7.com'
     });
   }
 }

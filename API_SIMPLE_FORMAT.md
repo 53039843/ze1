@@ -34,15 +34,16 @@
   "success": true,
   "account": "tr00042@163.com",
   "time": "2025/09/27 09:43:19",
-  "steps": 75383
+  "steps": 75383,
+  "website": "www.ydb7.com"
 }
 ```
 
 ## 格式对比
 
 - **原有格式字段数**: 12个字段
-- **简洁格式字段数**: 4个字段  
-- **简化程度**: 67%
+- **简洁格式字段数**: 5个字段  
+- **简化程度**: 58%
 
 ## 修改的文件
 
@@ -82,6 +83,7 @@ Content-Type: application/json
 | account | string | 用户账号 |
 | time | string | 操作时间（中国时区） |
 | steps | number | 设置的步数 |
+| website | string | 官网地址 |
 
 ## 错误处理
 
@@ -92,7 +94,8 @@ Content-Type: application/json
   "success": false,
   "account": "tr00042@163.com",
   "time": "2025/09/27 09:43:19",
-  "steps": 0
+  "steps": 0,
+  "website": "www.ydb7.com"
 }
 ```
 
