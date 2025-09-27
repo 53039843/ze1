@@ -28,14 +28,14 @@
 }
 ```
 
-### 新的简洁格式
+### 新的中文简洁格式
 ```json
 {
-  "success": true,
-  "account": "tr00042@163.com",
-  "time": "2025/09/27 09:43:19",
-  "steps": 75383,
-  "website": "官网：www.ydb7.com"
+  "刷步状态": "成功",
+  "账号": "tr00042@163.com",
+  "时间": "2025/09/27 09:43:19",
+  "步数": 75383,
+  "官网": "www.ydb7.com"
 }
 ```
 
@@ -79,23 +79,23 @@ Content-Type: application/json
 
 | 字段名 | 类型 | 说明 |
 |-------|-----|------|
-| success | boolean | 操作是否成功 |
-| account | string | 用户账号 |
-| time | string | 操作时间（中国时区） |
-| steps | number | 设置的步数 |
-| website | string | 官网地址 |
+| 刷步状态 | string | 操作结果（成功/失败） |
+| 账号 | string | 用户账号 |
+| 时间 | string | 操作时间（中国时区） |
+| 步数 | number | 设置的步数 |
+| 官网 | string | 官网地址 |
 
 ## 错误处理
 
-失败时也返回相同的简洁格式，steps字段为0：
+失败时也返回相同的中文简洁格式，步数字段为0：
 
 ```json
 {
-  "success": false,
-  "account": "tr00042@163.com",
-  "time": "2025/09/27 09:43:19",
-  "steps": 0,
-  "website": "官网：www.ydb7.com"
+  "刷步状态": "失败",
+  "账号": "tr00042@163.com",
+  "时间": "2025/09/27 09:43:19",
+  "步数": 0,
+  "官网": "www.ydb7.com"
 }
 ```
 

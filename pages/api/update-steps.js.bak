@@ -21,9 +21,9 @@ export default async function handler(req, res) {
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
     return res.status(405).json({ 
-      '刷步状态': '失败',
-      '账号': '',
-      '时间': new Date().toLocaleString('zh-CN', { 
+      success: false,
+      account: '',
+      time: new Date().toLocaleString('zh-CN', { 
         timeZone: 'Asia/Shanghai',
         year: 'numeric',
         month: '2-digit',
@@ -32,8 +32,8 @@ export default async function handler(req, res) {
         minute: '2-digit',
         second: '2-digit'
       }),
-      '步数': 0,
-      '官网': 'www.ydb7.com'
+      steps: 0,
+      website: '官网：www.ydb7.com'
     });
   }
 
@@ -49,9 +49,9 @@ export default async function handler(req, res) {
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
       return res.status(400).json({ 
-        '刷步状态': '失败',
-        '账号': account || '',
-        '时间': new Date().toLocaleString('zh-CN', { 
+        success: false,
+        account: account || '',
+        time: new Date().toLocaleString('zh-CN', { 
           timeZone: 'Asia/Shanghai',
           year: 'numeric',
           month: '2-digit',
@@ -60,8 +60,8 @@ export default async function handler(req, res) {
           minute: '2-digit',
           second: '2-digit'
         }),
-        '步数': 0,
-        '官网': 'www.ydb7.com'
+        steps: 0,
+        website: '官网：www.ydb7.com'
       });
     }
 
@@ -72,9 +72,9 @@ export default async function handler(req, res) {
       if (isNaN(targetSteps) || targetSteps < 0 || targetSteps > 100000) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
         return res.status(400).json({
-          '刷步状态': '失败',
-          '账号': account,
-          '时间': new Date().toLocaleString('zh-CN', { 
+          success: false,
+          account: account,
+          time: new Date().toLocaleString('zh-CN', { 
             timeZone: 'Asia/Shanghai',
             year: 'numeric',
             month: '2-digit',
@@ -83,8 +83,8 @@ export default async function handler(req, res) {
             minute: '2-digit',
             second: '2-digit'
           }),
-          '步数': 0,
-          '官网': 'www.ydb7.com'
+          steps: 0,
+          website: '官网：www.ydb7.com'
         });
       }
     } else {
@@ -129,9 +129,9 @@ export default async function handler(req, res) {
       if (makuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退，直接返回错误`);
         return res.status(500).json({
-          '刷步状态': '失败',
-          '账号': account,
-          '时间': new Date().toLocaleString('zh-CN', { 
+          success: false,
+          account: account,
+          time: new Date().toLocaleString('zh-CN', { 
             timeZone: 'Asia/Shanghai',
             year: 'numeric',
             month: '2-digit',
@@ -140,8 +140,8 @@ export default async function handler(req, res) {
             minute: '2-digit',
             second: '2-digit'
           }),
-          '步数': 0,
-          '官网': 'www.ydb7.com'
+          steps: 0,
+          website: '官网：www.ydb7.com'
         });
       }
 
@@ -168,11 +168,11 @@ export default async function handler(req, res) {
       const result = await zeppLifeSteps.updateSteps(loginToken, appToken, targetSteps);
       console.log(`[${requestId}] 步数更新结果:`, result);
 
-      // 返回结果 - 中文简洁格式
+      // 返回结果 - 简洁格式（账号、时间、成功状态、步数）
       const response = {
-        '刷步状态': '成功',
-        '账号': account,
-        '时间': new Date().toLocaleString('zh-CN', { 
+        success: true,
+        account: account,
+        time: new Date().toLocaleString('zh-CN', { 
           timeZone: 'Asia/Shanghai',
           year: 'numeric',
           month: '2-digit',
@@ -181,8 +181,8 @@ export default async function handler(req, res) {
           minute: '2-digit',
           second: '2-digit'
         }),
-        '步数': targetSteps,
-        '官网': 'www.ydb7.com'
+        steps: targetSteps,
+        website: '官网：www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -194,11 +194,11 @@ export default async function handler(req, res) {
     } catch (zeppError) {
       console.error(`[${requestId}] ZeppLife API调用失败:`, zeppError.message);
       
-      // 返回错误 - 中文简洁格式
+      // 返回错误 - 简洁格式
       const response = {
-        '刷步状态': '失败',
-        '账号': account,
-        '时间': new Date().toLocaleString('zh-CN', { 
+        success: false,
+        account: account,
+        time: new Date().toLocaleString('zh-CN', { 
           timeZone: 'Asia/Shanghai',
           year: 'numeric',
           month: '2-digit',
@@ -207,8 +207,8 @@ export default async function handler(req, res) {
           minute: '2-digit',
           second: '2-digit'
         }),
-        '步数': 0,
-        '官网': 'www.ydb7.com'
+        steps: 0,
+        website: '官网：www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -223,9 +223,9 @@ export default async function handler(req, res) {
     console.error(`[${requestId}] 请求处理失败，耗时: ${duration}ms`, error);
     
     return res.status(500).json({
-      '刷步状态': '失败',
-      '账号': req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
-      '时间': new Date().toLocaleString('zh-CN', { 
+      success: false,
+      account: req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
+      time: new Date().toLocaleString('zh-CN', { 
         timeZone: 'Asia/Shanghai',
         year: 'numeric',
         month: '2-digit',
@@ -234,8 +234,8 @@ export default async function handler(req, res) {
         minute: '2-digit',
         second: '2-digit'
       }),
-      '步数': 0,
-      '官网': 'www.ydb7.com'
+      steps: 0,
+      website: '官网：www.ydb7.com'
     });
   }
 }

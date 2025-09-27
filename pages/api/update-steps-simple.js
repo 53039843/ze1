@@ -21,11 +21,11 @@ export default async function handler(req, res) {
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
     return res.status(405).json({ 
-      success: false,
-      account: '',
-      time: getCurrentTime(),
-      steps: 0,
-      website: '官网：www.ydb7.com'
+      '刷步状态': '失败',
+      '账号': '',
+      '时间': getCurrentTime(),
+      '步数': 0,
+      '官网': 'www.ydb7.com'
     });
   }
 
@@ -41,11 +41,11 @@ export default async function handler(req, res) {
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
       return res.status(400).json({ 
-        success: false, 
-        account: account || '',
-        time: getCurrentTime(),
-        steps: 0,
-        website: '官网：www.ydb7.com'
+        '刷步状态': '失败', 
+        '账号': account || '',
+        '时间': getCurrentTime(),
+        '步数': 0,
+        '官网': 'www.ydb7.com'
       });
     }
 
@@ -56,11 +56,11 @@ export default async function handler(req, res) {
       if (isNaN(targetSteps) || targetSteps < 0 || targetSteps > 100000) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
         return res.status(400).json({
-          success: false,
-          account: account,
-          time: getCurrentTime(),
-          steps: 0,
-          website: '官网：www.ydb7.com'
+          '刷步状态': '失败',
+          '账号': account,
+          '时间': getCurrentTime(),
+          '步数': 0,
+          '官网': 'www.ydb7.com'
         });
       }
     } else {
@@ -80,11 +80,11 @@ export default async function handler(req, res) {
         
         // 返回简洁格式
         const response = {
-          success: true,
-          account: account,
-          time: getCurrentTime(),
-          steps: targetSteps,
-          website: '官网：www.ydb7.com'
+          '刷步状态': '成功',
+          '账号': account,
+          '时间': getCurrentTime(),
+          '步数': targetSteps,
+          '官网': 'www.ydb7.com'
         };
         
         return res.status(200).json(response);
@@ -97,11 +97,11 @@ export default async function handler(req, res) {
       if (makuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退，直接返回错误`);
         return res.status(500).json({
-          success: false,
-          account: account,
-          time: getCurrentTime(),
-          steps: 0,
-          website: '官网：www.ydb7.com'
+          '刷步状态': '失败',
+          '账号': account,
+          '时间': getCurrentTime(),
+          '步数': 0,
+          '官网': 'www.ydb7.com'
         });
       }
 
@@ -130,11 +130,11 @@ export default async function handler(req, res) {
 
       // 返回简洁格式
       const response = {
-        success: true,
-        account: account,
-        time: getCurrentTime(),
-        steps: targetSteps,
-        website: '官网：www.ydb7.com'
+        '刷步状态': '成功',
+        '账号': account,
+        '时间': getCurrentTime(),
+        '步数': targetSteps,
+        '官网': 'www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -148,11 +148,11 @@ export default async function handler(req, res) {
       
       // 返回错误 - 简洁格式
       const response = {
-        success: false,
-        account: account,
-        time: getCurrentTime(),
-        steps: 0,
-        website: '官网：www.ydb7.com'
+        '刷步状态': '失败',
+        '账号': account,
+        '时间': getCurrentTime(),
+        '步数': 0,
+        '官网': 'www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -167,11 +167,11 @@ export default async function handler(req, res) {
     console.error(`[${requestId}] 请求处理失败，耗时: ${duration}ms`, error);
     
     return res.status(500).json({
-      success: false,
-      account: req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
-      time: getCurrentTime(),
-      steps: 0,
-      website: '官网：www.ydb7.com'
+      '刷步状态': '失败',
+      '账号': req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
+      '时间': getCurrentTime(),
+      '步数': 0,
+      '官网': 'www.ydb7.com'
     });
   }
 }
@@ -190,7 +190,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       params: {
         user: account,
         pass: password,
-        steps: targetSteps.toString()
+        '步数': targetSteps.toString()
       },
       headers: {
         'Authorization': token,
@@ -222,7 +222,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       const shouldNotFallback = isBusinessError(errorMsg);
       
       return {
-        success: false,
+        '刷步状态': '失败',
         message: `makuo.cc API调用失败: ${errorMsg}`,
         shouldNotFallback,
         data: response.data
@@ -231,7 +231,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
 
     // 成功响应
     return {
-      success: true,
+      '刷步状态': '成功',
       message: `步数修改成功: ${targetSteps}`,
       data: response.data
     };
@@ -241,7 +241,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
     
     // 网络错误或超时，应该回退
     return {
-      success: false,
+      '刷步状态': '失败',
       message: `makuo.cc API网络错误: ${error.message}`,
       shouldNotFallback: false,
       error: error.message

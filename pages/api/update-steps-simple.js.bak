@@ -1,11 +1,11 @@
-// 优化版本：对接makuo.cc API，保持原有返回格式不变
+// 简洁格式API接口：返回账号、时间、成功状态、步数
+// 官网：www.ydb7.com
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
 
 /**
- * 小米运动步数更新API处理器
- * 优先使用makuo.cc API，失败时自动回退到ZeppLife API
- * 保持与原有update-steps.js完全相同的返回格式
+ * 简洁格式的步数更新API处理器
+ * 返回格式：账号、时间、成功状态、步数
  */
 export default async function handler(req, res) {
   // 设置CORS头部
@@ -21,19 +21,11 @@ export default async function handler(req, res) {
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
     return res.status(405).json({ 
-      '刷步状态': '失败',
-      '账号': '',
-      '时间': new Date().toLocaleString('zh-CN', { 
-        timeZone: 'Asia/Shanghai',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      }),
-      '步数': 0,
-      '官网': 'www.ydb7.com'
+      success: false,
+      account: '',
+      time: getCurrentTime(),
+      steps: 0,
+      website: '官网：www.ydb7.com'
     });
   }
 
@@ -49,19 +41,11 @@ export default async function handler(req, res) {
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
       return res.status(400).json({ 
-        '刷步状态': '失败',
-        '账号': account || '',
-        '时间': new Date().toLocaleString('zh-CN', { 
-          timeZone: 'Asia/Shanghai',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        '步数': 0,
-        '官网': 'www.ydb7.com'
+        success: false, 
+        account: account || '',
+        time: getCurrentTime(),
+        steps: 0,
+        website: '官网：www.ydb7.com'
       });
     }
 
@@ -72,19 +56,11 @@ export default async function handler(req, res) {
       if (isNaN(targetSteps) || targetSteps < 0 || targetSteps > 100000) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
         return res.status(400).json({
-          '刷步状态': '失败',
-          '账号': account,
-          '时间': new Date().toLocaleString('zh-CN', { 
-            timeZone: 'Asia/Shanghai',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          '步数': 0,
-          '官网': 'www.ydb7.com'
+          success: false,
+          account: account,
+          time: getCurrentTime(),
+          steps: 0,
+          website: '官网：www.ydb7.com'
         });
       }
     } else {
@@ -102,21 +78,13 @@ export default async function handler(req, res) {
         const duration = Date.now() - startTime;
         console.log(`[${requestId}] makuo.cc API调用成功，耗时: ${duration}ms`);
         
-        // 转换为中文简洁格式
+        // 返回简洁格式
         const response = {
-          '刷步状态': '成功',
-          '账号': account,
-          '时间': new Date().toLocaleString('zh-CN', { 
-            timeZone: 'Asia/Shanghai',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          '步数': targetSteps,
-          '官网': 'www.ydb7.com'
+          success: true,
+          account: account,
+          time: getCurrentTime(),
+          steps: targetSteps,
+          website: '官网：www.ydb7.com'
         };
         
         return res.status(200).json(response);
@@ -129,19 +97,11 @@ export default async function handler(req, res) {
       if (makuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退，直接返回错误`);
         return res.status(500).json({
-          '刷步状态': '失败',
-          '账号': account,
-          '时间': new Date().toLocaleString('zh-CN', { 
-            timeZone: 'Asia/Shanghai',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          }),
-          '步数': 0,
-          '官网': 'www.ydb7.com'
+          success: false,
+          account: account,
+          time: getCurrentTime(),
+          steps: 0,
+          website: '官网：www.ydb7.com'
         });
       }
 
@@ -168,21 +128,13 @@ export default async function handler(req, res) {
       const result = await zeppLifeSteps.updateSteps(loginToken, appToken, targetSteps);
       console.log(`[${requestId}] 步数更新结果:`, result);
 
-      // 返回结果 - 中文简洁格式
+      // 返回简洁格式
       const response = {
-        '刷步状态': '成功',
-        '账号': account,
-        '时间': new Date().toLocaleString('zh-CN', { 
-          timeZone: 'Asia/Shanghai',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        '步数': targetSteps,
-        '官网': 'www.ydb7.com'
+        success: true,
+        account: account,
+        time: getCurrentTime(),
+        steps: targetSteps,
+        website: '官网：www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -194,21 +146,13 @@ export default async function handler(req, res) {
     } catch (zeppError) {
       console.error(`[${requestId}] ZeppLife API调用失败:`, zeppError.message);
       
-      // 返回错误 - 中文简洁格式
+      // 返回错误 - 简洁格式
       const response = {
-        '刷步状态': '失败',
-        '账号': account,
-        '时间': new Date().toLocaleString('zh-CN', { 
-          timeZone: 'Asia/Shanghai',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        }),
-        '步数': 0,
-        '官网': 'www.ydb7.com'
+        success: false,
+        account: account,
+        time: getCurrentTime(),
+        steps: 0,
+        website: '官网：www.ydb7.com'
       };
       
       const duration = Date.now() - startTime;
@@ -223,19 +167,11 @@ export default async function handler(req, res) {
     console.error(`[${requestId}] 请求处理失败，耗时: ${duration}ms`, error);
     
     return res.status(500).json({
-      '刷步状态': '失败',
-      '账号': req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
-      '时间': new Date().toLocaleString('zh-CN', { 
-        timeZone: 'Asia/Shanghai',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      }),
-      '步数': 0,
-      '官网': 'www.ydb7.com'
+      success: false,
+      account: req.method === 'POST' ? req.body?.account || '' : req.query?.account || '',
+      time: getCurrentTime(),
+      steps: 0,
+      website: '官网：www.ydb7.com'
     });
   }
 }
@@ -293,9 +229,10 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       };
     }
 
-    // 成功响应 - 简洁格式
+    // 成功响应
     return {
       success: true,
+      message: `步数修改成功: ${targetSteps}`,
       data: response.data
     };
 
@@ -330,8 +267,23 @@ function isBusinessError(errorMsg) {
 }
 
 /**
+ * 获取当前时间（中国时区）
+ */
+function getCurrentTime() {
+  return new Date().toLocaleString('zh-CN', { 
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+}
+
+/**
  * 生成请求ID用于日志追踪
  */
 function generateRequestId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-} 
+}
