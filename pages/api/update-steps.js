@@ -121,7 +121,7 @@ export default async function handler(req, res) {
         data: {
           steps: targetSteps,
           update_time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
-          api_source: 'www.ydb7.com'
+          api_source: '官网:www.ydb7.com'
         }
       };
       
@@ -218,7 +218,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       data: {
         steps: targetSteps,
         update_time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
-        api_source: 'www.ydb7.com'
+        api_source: '官网:www.ydb7.com'
       }
     };
 
