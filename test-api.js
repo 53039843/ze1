@@ -10,7 +10,7 @@ const TEST_CONFIG = {
   
   // API配置
   makuoApiUrl: 'https://api.makuo.cc/api/get.sport.xiaomi',
-  token: 'LUvOOl2x8II1POI9KfnFeQ',
+  token: 'xbAbPHInyLaesR6PKG6MZg',
   
   // 本地API测试地址
   localApiUrl: 'http://localhost:3000/api/makuo-steps'

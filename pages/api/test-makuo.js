@@ -51,7 +51,7 @@ export default async function handler(req, res) {
 
     // 调用makuo.cc API
     const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
-    const token = 'LUvOOl2x8II1POI9KfnFeQ';
+    const token = 'xbAbPHInyLaesR6PKG6MZg';
 
     console.log('[测试API] 正在调用makuo.cc API...');
     

@@ -148,7 +148,7 @@ function createStandardResponse(status, account, steps) {
  */
 async function callMakuoAPI(requestId, account, password, targetSteps) {
   const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
-  const token = 'LUvOOl2x8II1POI9KfnFeQ';
+  const token = 'xbAbPHInyLaesR6PKG6MZg';
 
   try {
     console.log(`[${requestId}] 正在调用makuo.cc API...`);
