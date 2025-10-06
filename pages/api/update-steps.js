@@ -30,12 +30,16 @@ export default async function handler(req, res) {
 
   try {
     // 提取请求参数
-    const { account, password, steps } = req.method === 'POST' ? req.body : req.query;
+    const { account, password, steps, priority } = req.method === 'POST' ? req.body : req.query;
+
+    // 设置优先级，默认为1
+    const requestPriority = priority || 1;
+    console.log(`[${requestId}] 请求优先级: ${requestPriority}`);
 
     // 参数验证
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
-      return res.status(400).send(createStandardResponse('失败', account || '', 0));
+      return res.status(400).send(createStandardResponse('失败', account || '', 0, requestPriority));
     }
 
     // 处理步数参数
@@ -44,7 +48,7 @@ export default async function handler(req, res) {
       targetSteps = parseInt(steps, 10);
       if (isNaN(targetSteps) || targetSteps < 0 || targetSteps > 100000) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
-        return res.status(400).send(createStandardResponse('失败', account, 0));
+        return res.status(400).send(createStandardResponse('失败', account, 0, requestPriority));
       }
     } else {
       // 生成合理范围内的随机步数
@@ -62,7 +66,7 @@ export default async function handler(req, res) {
         console.log(`[${requestId}] makuo.cc API调用成功，耗时: ${duration}ms`);
         
         // 返回标准格式
-        return res.status(200).send(createStandardResponse('成功', account, targetSteps));
+        return res.status(200).send(createStandardResponse('成功', account, targetSteps, requestPriority));
       }
 
       // makuo.cc API失败，检查是否应该回退
@@ -71,7 +75,7 @@ export default async function handler(req, res) {
       // 如果是明确的业务错误（如账号密码错误），不进行回退
       if (makuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退，直接返回错误`);
-        return res.status(500).send(createStandardResponse('失败', account, 0));
+        return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
       }
 
     } catch (makuoError) {
@@ -101,7 +105,7 @@ export default async function handler(req, res) {
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] ZeppLife API调用成功，总耗时: ${duration}ms`);
       
-      return res.status(200).send(createStandardResponse('成功', account, targetSteps));
+      return res.status(200).send(createStandardResponse('成功', account, targetSteps, requestPriority));
       
     } catch (zeppError) {
       console.error(`[${requestId}] ZeppLife API调用失败:`, zeppError.message);
@@ -110,21 +114,24 @@ export default async function handler(req, res) {
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] 所有API均失败，总耗时: ${duration}ms`);
       
-      return res.status(500).send(createStandardResponse('失败', account, 0));
+      return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
     }
 
   } catch (error) {
     const duration = Date.now() - startTime;
     console.error(`[${requestId}] 请求处理失败，耗时: ${duration}ms`, error);
     
-    return res.status(500).send(createStandardResponse('失败', req.method === 'POST' ? req.body?.account || '' : req.query?.account || '', 0));
+    const account = req.method === 'POST' ? req.body?.account || '' : req.query?.account || '';
+    const priority = req.method === 'POST' ? req.body?.priority || 1 : req.query?.priority || 1;
+    
+    return res.status(500).send(createStandardResponse('失败', account, 0, priority));
   }
 }
 
 /**
  * 创建标准格式的响应（一行一个值）
  */
-function createStandardResponse(status, account, steps) {
+function createStandardResponse(status, account, steps, priority = 1) {
   const currentTime = new Date().toLocaleString('zh-CN', { 
     timeZone: 'Asia/Shanghai',
     year: 'numeric',
@@ -140,6 +147,7 @@ function createStandardResponse(status, account, steps) {
 账号：${account}
 时间：${currentTime}
 步数：${steps}
+优先级：${priority}
 官网：www.ydb7.com`;
 
   return response;
