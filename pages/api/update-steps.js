@@ -21,11 +21,12 @@ export default async function handler(req, res) {
 
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
-    return res.status(405).send(createStandardResponse('失败', '', 0));
+    return res.status(405).send(createStandardResponse('失败', '', 0, requestPriority));
   }
 
   const startTime = Date.now();
   const requestId = generateRequestId();
+  const requestPriority = req.method === 'POST' ? req.body?.priority || 1 : req.query?.priority || 1;
   console.log(`[${requestId}] 开始处理${req.method}请求`);
 
   try {
@@ -39,7 +40,7 @@ export default async function handler(req, res) {
     // 参数验证
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
-      return res.status(400).send(createStandardResponse('失败', account || '', 0, requestPriority));
+      return res.status(400).send(createStandardResponse('失败', account || '', 0, requestPriority, '账号和密码不能为空', '#000000'));
     }
 
     // 处理步数参数
@@ -48,11 +49,16 @@ export default async function handler(req, res) {
       targetSteps = parseInt(steps, 10);
       if (isNaN(targetSteps) || targetSteps < 0 || targetSteps > 100000) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
-        return res.status(400).send(createStandardResponse('失败', account, 0, requestPriority));
+        return res.status(400).send(createStandardResponse("失败", account, 0, requestPriority));
       }
     } else {
       // 生成合理范围内的随机步数
       targetSteps = Math.floor(Math.random() * 10000) + 20000;
+    }
+
+    if (targetSteps > 5000) {
+      console.log(`[${requestId}] 步数超过5千步: ${targetSteps}`);
+      return res.status(400).send(createStandardResponse("失败", account, 0, requestPriority, "步数超过5千步，服务器资源有限，请前往会员版使用哦~", "#000000"));
     }
 
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
@@ -131,7 +137,7 @@ export default async function handler(req, res) {
 /**
  * 创建标准格式的响应（一行一个值）
  */
-function createStandardResponse(status, account, steps, priority = 1) {
+function createStandardResponse(status, account, steps, priority = 1, customMessage = null, messageColor = null) {
   const currentTime = new Date().toLocaleString('zh-CN', { 
     timeZone: 'Asia/Shanghai',
     year: 'numeric',
@@ -143,7 +149,17 @@ function createStandardResponse(status, account, steps, priority = 1) {
   });
 
   // 返回纯文本格式，一行一个值
-  const response = `刷步状态：${status}
+  let responseStatus = status;
+  if (customMessage) {
+    responseStatus = customMessage;
+  }
+
+  let statusLine = `刷步状态：${responseStatus}`;
+  if (messageColor) {
+    statusLine = `<span style="color:${messageColor}">${statusLine}</span>`;
+  }
+
+  const response = `${statusLine}
 账号：${account}
 时间：${currentTime}
 步数：${steps}
