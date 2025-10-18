@@ -1,7 +1,7 @@
 // 用户统计API - 简化版
-const { userOps, DEFAULT_ACCOUNT } = require('../../../lib/database-simple');
+import { userOps, DEFAULT_ACCOUNT } from "../../../lib/database-simple";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ success: false, message: '方法不允许' });
   }
@@ -10,9 +10,9 @@ export default function handler(req, res) {
     const { account = DEFAULT_ACCOUNT } = req.query;
 
     // 获取或创建用户
-    let user = userOps.getStats(account);
+    let user = await userOps.getStats(account);
     if (!user) {
-      user = userOps.getOrCreate(account);
+      user = await userOps.getOrCreate(account);
     }
 
     // 计算成功率

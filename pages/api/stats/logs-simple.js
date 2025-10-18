@@ -1,7 +1,7 @@
 // 调用记录API - 简化版
-const { logOps, DEFAULT_ACCOUNT } = require('../../../lib/database-simple');
+import { logOps, DEFAULT_ACCOUNT } from "../../../lib/database-simple";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ success: false, message: '方法不允许' });
   }
@@ -13,8 +13,8 @@ export default function handler(req, res) {
       pageSize = 20 
     } = req.query;
 
-    const records = logOps.getList(account, parseInt(page), parseInt(pageSize));
-    const total = logOps.getCount(account);
+    const records = await logOps.getList(account, parseInt(page), parseInt(pageSize));
+    const total = await logOps.getCount(account);
     const totalPages = Math.ceil(total / parseInt(pageSize));
 
     res.status(200).json({

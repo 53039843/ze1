@@ -12,6 +12,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
     "@ant-design/plots": "^2.6.5",
+    "@vercel/kv": "^3.0.0",
     "antd": "^5.8.6",
     "axios": "^1.8.4",
     "better-sqlite3": "^12.4.1",
