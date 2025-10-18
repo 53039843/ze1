@@ -267,7 +267,6 @@ const Dashboard = () => {
           }}>
             <div>
               <h1 style={{ margin: 0, fontSize: 24 }}>API使用统计仪表盘</h1>
-              <p style={{ margin: '4px 0 0 0', color: '#666' }}>演示账号: {FIXED_ACCOUNT}</p>
             </div>
             <Button 
               icon={<ReloadOutlined />} 
@@ -429,12 +428,14 @@ const Dashboard = () => {
               <div>
                 <label style={{ display: 'block', marginBottom: 8 }}>充值金额（元）</label>
                 <Input
-                  type="number"
                   value={rechargeAmount}
-                  onChange={(e) => setRechargeAmount(parseFloat(e.target.value))}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                      setRechargeAmount(val === '' ? '' : parseFloat(val) || '');
+                    }
+                  }}
                   placeholder="请输入充值金额"
-                  min={1}
-                  max={10000}
                   size="large"
                   prefix="¥"
                 />
