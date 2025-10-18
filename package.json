@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "node server.js"
+    "start": "node server.js",
+    "clean": "rm -rf .next",
+    "rebuild": "npm run clean && npm run build"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
