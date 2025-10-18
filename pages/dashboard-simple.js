@@ -114,7 +114,7 @@ const Dashboard = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post('/api/recharge/create', {
+      const res = await axios.post('/api/recharge/create-simple', {
         account: FIXED_ACCOUNT,
         amount: rechargeAmount,
         type: paymentType
