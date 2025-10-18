@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Table, Button, Modal, Input, message, Select, Statistic, Tag, Space, Spin } from 'antd';
+import { Card, Row, Col, Table, Button, Modal, message, Select, Statistic, Tag, Space, Spin, Radio } from 'antd';
 import { 
   DollarOutlined, 
   ApiOutlined, 
@@ -30,7 +30,7 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [rechargeModalVisible, setRechargeModalVisible] = useState(false);
-  const [rechargeAmount, setRechargeAmount] = useState("");
+  const [rechargeAmount, setRechargeAmount] = useState(10);
   const [paymentType, setPaymentType] = useState('alipay');
 
   // 检查是否从充值成功页面返回
@@ -426,23 +426,18 @@ const Dashboard = () => {
           >
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               <div>
-                <label style={{ display: 'block', marginBottom: 8 }}>充值金额（元）</label>
-                <Input
+                <label style={{ display: 'block', marginBottom: 8 }}>选择充值金额（元）</label>
+                <Radio.Group
                   value={rechargeAmount}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    // 允许空字符串或匹配数字（整数或浮点数）
-                    if (val === '' || /^\d*\.?\d*$/.test(val)) {
-                      setRechargeAmount(val);
-                    }
-                  }}
-                  placeholder="请输入充值金额"
+                  onChange={(e) => setRechargeAmount(e.target.value)}
                   size="large"
-                  prefix="¥"
-                />
-                <p style={{ marginTop: 8, fontSize: 12, color: '#666' }}>
-                  充值金额范围: 1-10000元
-                </p>
+                  style={{ width: '100%', marginBottom: 16 }}
+                >
+                  <Radio.Button value={10}>10元</Radio.Button>
+                  <Radio.Button value={20}>20元</Radio.Button>
+                  <Radio.Button value={50}>50元</Radio.Button>
+                  <Radio.Button value={100}>100元</Radio.Button>
+                </Radio.Group>
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: 8 }}>支付方式</label>
