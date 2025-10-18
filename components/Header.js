@@ -3,13 +3,19 @@ import { Typography, Tooltip, Button, Badge } from 'antd';
 import { 
   QuestionCircleOutlined,
   SettingOutlined,
-  UserOutlined
+  UserOutlined,
+  DashboardOutlined,
+  HomeOutlined
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const { Title } = Typography;
 
 const Header = ({ onShowSettings, onShowHelp, streak }) => {
+  const router = useRouter();
+  const isDashboard = router.pathname === '/dashboard';
   return (
     <>
       <motion.div 
@@ -48,6 +54,16 @@ const Header = ({ onShowSettings, onShowHelp, streak }) => {
       
       {/* 浮动操作按钮组 - 完全独立于Header */}
       <div className="floating-action-buttons">
+        <Tooltip title={isDashboard ? "返回首页" : "仪表盘"} placement="left">
+          <Link href={isDashboard ? "/" : "/dashboard"}>
+            <Button 
+              type="text" 
+              className="floating-button"
+              icon={isDashboard ? <HomeOutlined /> : <DashboardOutlined />}
+            />
+          </Link>
+        </Tooltip>
+        
         <Tooltip title="设置" placement="left">
           <Button 
             type="text" 
