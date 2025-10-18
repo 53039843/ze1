@@ -1,9 +1,37 @@
-# Zepp-Life-Steps
+# Zepp-Life-Steps - API计费和统计系统
 
 [![star](https://img.shields.io/github/stars/miloce/Zepp-Life-Steps.svg?logo=github)](https://github.com/miloce/Zepp-Life-Steps)
 [![license](https://img.shields.io/github/license/miloce/Zepp-Life-Steps)](https://github.com/miloce/Zepp-Life-Steps)
-[![vercel](https://img.shields.io/badge/部署-Vercel-blue?logo=vercel)](https://vercel.com)
-[![微信小程序](https://img.shields.io/badge/微信小程序-可用-green?logo=wechat)](https://mp.weixin.qq.com)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/53039843/ze1)
+
+> 通过Zepp Life（原小米运动）API实现了一个运动步数修改工具，支持邮箱和手机号登录方式，可实现同步运动步数至微信、支付宝等。
+
+## 🎉 新增功能：API计费和统计系统
+
+### ✨ 主要特性
+- 💰 **API调用计费**：单次调用¥0.006，失败不扣费
+- 📊 **统计仪表板**：实时查看调用统计、余额、成功率
+- 📈 **可视化图表**：7天API使用趋势展示
+- 💳 **易支付充值**：支持支付宝和微信支付
+- 📝 **详细记录**：记录每次调用的IP、时间、状态
+
+### 🚀 快速部署统计系统
+
+点击上方按钮一键部署到Vercel，部署后访问：
+- **统计仪表板**：`https://your-domain.com/dashboard-simple`
+- **原步数修改页面**：`https://your-domain.com/`
+
+**特点**：
+- ✅ 无需登录，打开即用
+- ✅ 固定演示账号（demo@zepp.com）
+- ✅ 完全免费部署
+
+详细文档：
+- [Vercel部署指南](./VERCEL_DEPLOY.md)
+- [功能说明文档](./BILLING_FEATURE.md)
+- [测试报告](./TEST_REPORT.md)
+
+---
 
 > 通过Zepp Life（原小米运动）API实现了一个运动步数修改工具，支持邮箱和手机号登录方式，可实现同步运动步数至微信、支付宝等。
 
