@@ -30,7 +30,7 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [rechargeModalVisible, setRechargeModalVisible] = useState(false);
-  const [rechargeAmount, setRechargeAmount] = useState(10);
+  const [rechargeAmount, setRechargeAmount] = useState("");
   const [paymentType, setPaymentType] = useState('alipay');
 
   // 检查是否从充值成功页面返回
@@ -431,8 +431,9 @@ const Dashboard = () => {
                   value={rechargeAmount}
                   onChange={(e) => {
                     const val = e.target.value;
+                    // 允许空字符串或匹配数字（整数或浮点数）
                     if (val === '' || /^\d*\.?\d*$/.test(val)) {
-                      setRechargeAmount(val === '' ? '' : parseFloat(val) || '');
+                      setRechargeAmount(val);
                     }
                   }}
                   placeholder="请输入充值金额"

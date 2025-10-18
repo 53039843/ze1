@@ -47,19 +47,16 @@ export default async function handler(req, res) {
     let targetSteps;
     if (steps) {
       targetSteps = parseInt(steps, 10);
-      if (isNaN(targetSteps) || targetSteps < 0 || targetSteps > 100000) {
+      if (isNaN(targetSteps) || targetSteps < 0) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
         return res.status(400).send(createStandardResponse("失败", account, 0, requestPriority));
       }
     } else {
       // 生成合理范围内的随机步数
-      targetSteps = Math.floor(Math.random() * 10000) + 20000;
+      targetSteps = Math.floor(Math.random() * 100000) + 10000;
     }
 
-    if (targetSteps > 5000) {
-      console.log(`[${requestId}] 步数超过5千步: ${targetSteps}`);
-      return res.status(400).send(createStandardResponse("失败", account, 0, requestPriority, "步数超过5千步，服务器资源有限，请前往会员版使用哦~", "#000000"));
-    }
+
 
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
