@@ -1,9 +1,8 @@
 // 标准格式API接口：返回美观的一行一个值格式
 // 官网：www.ydb7.com
 const axios = require('axios');
-const zeppLifeSteps = require('./ZeppLifeSteps');
-
-/**
+const zeppLifeSteps = require(\'./ZeppLifeSteps\');
+const { logOps, userOps } = require(\'../../lib/database-simple\');/**
  * 标准格式的步数更新API处理器
  * 返回格式：一行一个值，美观易读
  */
@@ -69,6 +68,15 @@ export default async function handler(req, res) {
         console.log(`[${requestId}] makuo.cc API调用成功，耗时: ${duration}ms`);
         
         // 返回标准格式
+        logOps.add({
+          account,
+          api_name: 'update-steps',
+          ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+          status: 'success',
+          steps: targetSteps,
+          cost: 0.006, // 假设每次调用固定费用
+          balance_after: userOps.getStats(account)?.balance // 获取更新后的余额
+        });
         return res.status(200).send(createStandardResponse('成功', account, targetSteps, requestPriority));
       }
 
@@ -78,7 +86,16 @@ export default async function handler(req, res) {
       // 如果是明确的业务错误（如账号密码错误），不进行回退
       if (makuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退，直接返回错误`);
-        return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
+        logOps.add({
+        account,
+        api_name: 'update-steps',
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        status: 'failed',
+        steps: targetSteps,
+        cost: 0,
+        balance_after: userOps.getStats(account)?.balance
+      });
+      return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
       }
 
     } catch (makuoError) {
@@ -108,6 +125,15 @@ export default async function handler(req, res) {
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] ZeppLife API调用成功，总耗时: ${duration}ms`);
       
+      logOps.add({
+        account,
+        api_name: 'update-steps',
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        status: 'success',
+        steps: targetSteps,
+        cost: 0.006,
+        balance_after: userOps.getStats(account)?.balance
+      });
       return res.status(200).send(createStandardResponse('成功', account, targetSteps, requestPriority));
       
     } catch (zeppError) {
@@ -117,6 +143,15 @@ export default async function handler(req, res) {
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] 所有API均失败，总耗时: ${duration}ms`);
       
+      logOps.add({
+        account,
+        api_name: 'update-steps',
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        status: 'failed',
+        steps: targetSteps,
+        cost: 0,
+        balance_after: userOps.getStats(account)?.balance
+      });
       return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
     }
 
