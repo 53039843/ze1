@@ -84,20 +84,20 @@ export default async function handler(req, res) {
     let apiSuccess = false;
     let errorMessage = '';
 
-    // 第一步：尝试调用makuo.cc API
+    // 第一步：尝试调用tmini.net API
     try {
-      const makuoResult = await callMakuoAPI(requestId, account, password, targetSteps);
+      const tminiResult = await callTminiAPI(requestId, account, password, targetSteps);
       
-      if (makuoResult.success) {
+      if (tminiResult.success) {
         apiSuccess = true;
         const duration = Date.now() - startTime;
-        console.log(`[${requestId}] makuo.cc API调用成功，耗时: ${duration}ms`);
+        console.log(`[${requestId}] tmini.net API调用成功，耗时: ${duration}ms`);
       } else {
-        errorMessage = makuoResult.message;
-        console.log(`[${requestId}] makuo.cc API失败: ${makuoResult.message}`);
+        errorMessage = tminiResult.message;
+        console.log(`[${requestId}] tmini.net API失败: ${tminiResult.message}`);
         
         // 如果是明确的业务错误（如账号密码错误），不进行回退
-        if (makuoResult.shouldNotFallback) {
+        if (tminiResult.shouldNotFallback) {
           console.log(`[${requestId}] 不进行回退，直接返回错误`);
           
           // 记录失败日志（不扣费）
@@ -106,9 +106,8 @@ export default async function handler(req, res) {
           return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
         }
       }
-    } catch (makuoError) {
-      errorMessage = makuoError.message;
-      console.log(`[${requestId}] makuo.cc API异常: ${makuoError.message}`);
+    } catch (tminiError) {
+      console.log(`[${requestId}] tmini.net API异常: ${tminiError.message}`);
     }
 
     // 第二步：如果makuo失败，回退到ZeppLife API
@@ -254,28 +253,27 @@ function createStandardResponse(status, account, steps, priority = 1, customMess
 }
 
 /**
- * 调用makuo.cc API
+ * 调用tmini.net API
  */
-async function callMakuoAPI(requestId, account, password, targetSteps) {
-  const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
-  const token = 'xbAbPHInyLaesR6PKG6MZg';
+async function callTminiAPI(requestId, account, password, targetSteps) {
+  const apiUrl = 'https://tmini.net/api/xiaomi';
+  const ckey = 'Y5C7RVD66QOZYJ9HGYBR';
 
   try {
-    console.log(`[${requestId}] 正在调用makuo.cc API...`);
+    console.log(`[${requestId}] 正在调用tmini.net API...`);
     
     const response = await axios.get(apiUrl, {
       params: {
+        ckey: ckey,
         user: account,
         pass: password,
         steps: targetSteps.toString()
       },
       headers: {
-        'Authorization': token,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'application/json, text/plain, */*',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-        'Cache-Control': 'no-cache',
-        'Referer': 'https://api.makuo.cc/'
+        'Cache-Control': 'no-cache'
       },
       timeout: 15000,
       validateStatus: function (status) {
@@ -283,8 +281,8 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       }
     });
 
-    console.log(`[${requestId}] makuo.cc API响应状态: ${response.status}`);
-    console.log(`[${requestId}] makuo.cc API响应数据:`, response.data);
+    console.log(`[${requestId}] tmini.net API响应状态: ${response.status}`);
+    console.log(`[${requestId}] tmini.net API响应数据:`, response.data);
 
     if (response.status !== 200) {
       throw new Error(`HTTP状态码错误: ${response.status}`);
@@ -296,7 +294,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       
       return {
         success: false,
-        message: `makuo.cc API调用失败: ${errorMsg}`,
+        message: `tmini.net API调用失败: ${errorMsg}`,
         shouldNotFallback,
         data: response.data
       };
@@ -308,11 +306,11 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
     };
 
   } catch (error) {
-    console.error(`[${requestId}] makuo.cc API调用异常:`, error.message);
+    console.error(`[${requestId}] tmini.net API调用异常:`, error.message);
     
     return {
       success: false,
-      message: `makuo.cc API网络错误: ${error.message}`,
+      message: `tmini.net API网络错误: ${error.message}`,
       shouldNotFallback: false,
       error: error.message
     };

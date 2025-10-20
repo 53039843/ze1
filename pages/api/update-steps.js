@@ -1,12 +1,14 @@
-// 标准格式API接口：返回美观的一行一个值格式
-// 官网：www.ydb7.com
+// 标准格式API接口:返回美观的一行一个值格式
+// 官网:www.ydb7.com
 const axios = require('axios');
-const zeppLifeSteps = require(\'./ZeppLifeSteps\');
-cimport { logOps, userOps } from "../../lib/database-simple";;/**
+const zeppLifeSteps = require('./ZeppLifeSteps');
+const { logOps, userOps } = require("../../lib/database-simple");
+
+/**
  * 标准格式的步数更新API处理器
- * 返回格式：一行一个值，美观易读
+ * 返回格式:一行一个值,美观易读
  */
-exportexport default async function handler(req, res) {
+export default async function handler(req, res) {
   // 设置CORS头部和Content-Type
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -20,7 +22,7 @@ exportexport default async function handler(req, res) {
 
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
-    return res.status(405).send(createStandardResponse('失败', '', 0, requestPriority));
+    return res.status(405).send(createStandardResponse('失败', '', 0, 1));
   }
 
   const startTime = Date.now();
@@ -32,7 +34,7 @@ exportexport default async function handler(req, res) {
     // 提取请求参数
     const { account, password, steps, priority } = req.method === 'POST' ? req.body : req.query;
 
-    // 设置优先级，默认为1
+    // 设置优先级,默认为1
     const requestPriority = priority || 1;
     console.log(`[${requestId}] 请求优先级: ${requestPriority}`);
 
@@ -55,17 +57,15 @@ exportexport default async function handler(req, res) {
       targetSteps = Math.floor(Math.random() * 100000) + 10000;
     }
 
-
-
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
-    // 第一步：尝试调用makuo.cc API
+    // 第一步:尝试调用新的tmini.net API
     try {
-      const makuoResult = await callMakuoAPI(requestId, account, password, targetSteps);
+      const tminiResult = await callTminiAPI(requestId, account, password, targetSteps);
       
-      if (makuoResult.success) {
+      if (tminiResult.success) {
         const duration = Date.now() - startTime;
-        console.log(`[${requestId}] makuo.cc API调用成功，耗时: ${duration}ms`);
+        console.log(`[${requestId}] tmini.net API调用成功,耗时: ${duration}ms`);
         
         // 返回标准格式
         await logOps.add({
@@ -74,35 +74,35 @@ exportexport default async function handler(req, res) {
           ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
           status: 'success',
           steps: targetSteps,
-          cost: 0.006, // 假设每次调用固定费用
-          balance_after: userOps.getStats(account)?.balance // 获取更新后的余额
+          cost: 0.006,
+          balance_after: userOps.getStats(account)?.balance
         });
         return res.status(200).send(createStandardResponse('成功', account, targetSteps, requestPriority));
       }
 
-      // makuo.cc API失败，检查是否应该回退
-      console.log(`[${requestId}] makuo.cc API失败: ${makuoResult.message}`);
+      // tmini.net API失败,检查是否应该回退
+      console.log(`[${requestId}] tmini.net API失败: ${tminiResult.message}`);
       
-      // 如果是明确的业务错误（如账号密码错误），不进行回退
-      if (makuoResult.shouldNotFallback) {
-        console.log(`[${requestId}] 不进行回退，直接返回错误`);
+      // 如果是明确的业务错误(如账号密码错误),不进行回退
+      if (tminiResult.shouldNotFallback) {
+        console.log(`[${requestId}] 不进行回退,直接返回错误`);
         await logOps.add({
-        account,
-        api_name: 'update-steps',
-        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-        status: 'failed',
-        steps: targetSteps,
-        cost: 0,
-        balance_after: userOps.getStats(account)?.balance
-      });
-      return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
+          account,
+          api_name: 'update-steps',
+          ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+          status: 'failed',
+          steps: targetSteps,
+          cost: 0,
+          balance_after: userOps.getStats(account)?.balance
+        });
+        return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
       }
 
-    } catch (makuoError) {
-      console.log(`[${requestId}] makuo.cc API异常: ${makuoError.message}`);
+    } catch (tminiError) {
+      console.log(`[${requestId}] tmini.net API异常: ${tminiError.message}`);
     }
 
-    // 第二步：回退到ZeppLife API
+    // 第二步:回退到ZeppLife API
     console.log(`[${requestId}] 开始回退到ZeppLife API...`);
     
     try {
@@ -123,7 +123,7 @@ exportexport default async function handler(req, res) {
 
       // 返回标准格式
       const duration = Date.now() - startTime;
-      console.log(`[${requestId}] ZeppLife API调用成功，总耗时: ${duration}ms`);
+      console.log(`[${requestId}] ZeppLife API调用成功,总耗时: ${duration}ms`);
       
       await logOps.add({
         account,
@@ -141,7 +141,7 @@ exportexport default async function handler(req, res) {
       
       // 返回错误 - 标准格式
       const duration = Date.now() - startTime;
-      console.log(`[${requestId}] 所有API均失败，总耗时: ${duration}ms`);
+      console.log(`[${requestId}] 所有API均失败,总耗时: ${duration}ms`);
       
       await logOps.add({
         account,
@@ -157,7 +157,7 @@ exportexport default async function handler(req, res) {
 
   } catch (error) {
     const duration = Date.now() - startTime;
-    console.error(`[${requestId}] 请求处理失败，耗时: ${duration}ms`, error);
+    console.error(`[${requestId}] 请求处理失败,耗时: ${duration}ms`, error);
     
     const account = req.method === 'POST' ? req.body?.account || '' : req.query?.account || '';
     const priority = req.method === 'POST' ? req.body?.priority || 1 : req.query?.priority || 1;
@@ -167,7 +167,7 @@ exportexport default async function handler(req, res) {
 }
 
 /**
- * 创建标准格式的响应（一行一个值）
+ * 创建标准格式的响应(一行一个值)
  */
 function createStandardResponse(status, account, steps, priority = 1, customMessage = null, messageColor = null) {
   const currentTime = new Date().toLocaleString('zh-CN', { 
@@ -180,50 +180,49 @@ function createStandardResponse(status, account, steps, priority = 1, customMess
     second: '2-digit'
   });
 
-  // 返回纯文本格式，一行一个值
+  // 返回纯文本格式,一行一个值
   let responseStatus = status;
   if (customMessage) {
     responseStatus = customMessage;
   }
 
-  let statusLine = `刷步状态：${responseStatus}`;
+  let statusLine = `刷步状态:${responseStatus}`;
   if (messageColor) {
     statusLine = `<span style="color:${messageColor}">${statusLine}</span>`;
   }
 
   const response = `${statusLine}
-账号：${account}
-时间：${currentTime}
-步数：${steps}
-优先级：${priority}
-官网：www.ydb7.com`;
+账号:${account}
+时间:${currentTime}
+步数:${steps}
+优先级:${priority}
+官网:www.ydb7.com`;
 
   return response;
 }
 
 /**
- * 调用makuo.cc API
+ * 调用tmini.net API
  */
-async function callMakuoAPI(requestId, account, password, targetSteps) {
-  const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
-  const token = 'xbAbPHInyLaesR6PKG6MZg';
+async function callTminiAPI(requestId, account, password, targetSteps) {
+  const apiUrl = 'https://tmini.net/api/xiaomi';
+  const ckey = 'Y5C7RVD66QOZYJ9HGYBR';
 
   try {
-    console.log(`[${requestId}] 正在调用makuo.cc API...`);
+    console.log(`[${requestId}] 正在调用tmini.net API...`);
     
     const response = await axios.get(apiUrl, {
       params: {
+        ckey: ckey,
         user: account,
         pass: password,
         steps: targetSteps.toString()
       },
       headers: {
-        'Authorization': token,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'application/json, text/plain, */*',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-        'Cache-Control': 'no-cache',
-        'Referer': 'https://api.makuo.cc/'
+        'Cache-Control': 'no-cache'
       },
       timeout: 15000, // 15秒超时
       validateStatus: function (status) {
@@ -231,8 +230,8 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       }
     });
 
-    console.log(`[${requestId}] makuo.cc API响应状态: ${response.status}`);
-    console.log(`[${requestId}] makuo.cc API响应数据:`, response.data);
+    console.log(`[${requestId}] tmini.net API响应状态: ${response.status}`);
+    console.log(`[${requestId}] tmini.net API响应数据:`, response.data);
 
     // 检查HTTP状态码
     if (response.status !== 200) {
@@ -243,12 +242,12 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
     if (!response.data || response.data.code !== 200) {
       const errorMsg = response.data?.msg || '未知错误';
       
-      // 判断是否为业务错误（不应该回退）
+      // 判断是否为业务错误(不应该回退)
       const shouldNotFallback = isBusinessError(errorMsg);
       
       return {
         success: false,
-        message: `makuo.cc API调用失败: ${errorMsg}`,
+        message: `tmini.net API调用失败: ${errorMsg}`,
         shouldNotFallback,
         data: response.data
       };
@@ -261,12 +260,12 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
     };
 
   } catch (error) {
-    console.error(`[${requestId}] makuo.cc API调用异常:`, error.message);
+    console.error(`[${requestId}] tmini.net API调用异常:`, error.message);
     
-    // 网络错误或超时，应该回退
+    // 网络错误或超时,应该回退
     return {
       success: false,
-      message: `makuo.cc API网络错误: ${error.message}`,
+      message: `tmini.net API网络错误: ${error.message}`,
       shouldNotFallback: false,
       error: error.message
     };
@@ -274,7 +273,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
 }
 
 /**
- * 判断是否为业务错误（不应该回退的错误）
+ * 判断是否为业务错误(不应该回退的错误)
  */
 function isBusinessError(errorMsg) {
   const businessErrors = [
@@ -296,3 +295,4 @@ function isBusinessError(errorMsg) {
 function generateRequestId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
+
