@@ -15,7 +15,7 @@
 - ✅ 确认了两个API的兼容性
 
 ### 2. 对接实现完成
-- ✅ 成功对接makuo.cc API (`https://api.makuo.cc/api/get.sport.xiaomi`)
+- ✅ 成功对接makuo.cc API (`https://api.3x.ink/api/get.sport.update`)
 - ✅ 实现了智能回退机制（makuo.cc失败时自动使用ZeppLife API）
 - ✅ 保持了原有API的返回格式完全不变
 - ✅ 添加了完善的错误处理和日志记录
@@ -76,7 +76,7 @@ $ curl "http://localhost:3000/api/update-steps?account=tr00042@163.com&password=
       "code": 200,
       "msg": "请求成功！",
       "time": "2025-09-27 09:12:48",
-      "api_source": "API官网:api.makuo.cc",
+      "api_source": "API官网:api.3x.ink",
       "data": {
         "user": "tr00042@163.com",
         "steps": 1000,
@@ -154,7 +154,7 @@ https://your-domain.com/api/update-steps
 
 ### makuo.cc API配置
 ```javascript
-const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
+const apiUrl = 'https://api.3x.ink/api/get.sport.update';
 const token = 'LUvOOl2x8II1POI9KfnFeQ';
 ```
 

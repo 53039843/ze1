@@ -9,7 +9,7 @@ const TEST_CONFIG = {
   steps: 25000,
   
   // API配置
-  makuoApiUrl: 'https://api.makuo.cc/api/get.sport.xiaomi',
+  makuoApiUrl: 'https://api.3x.ink/api/get.sport.update',
   token: 'xbAbPHInyLaesR6PKG6MZg',
   
   // 本地API测试地址
@@ -17,10 +17,10 @@ const TEST_CONFIG = {
 };
 
 /**
- * 测试makuo.cc API直接调用
+ * 测试api.3x.ink API直接调用
  */
 async function testMakuoAPIDirect() {
-  console.log('\n=== 测试makuo.cc API直接调用 ===');
+  console.log('\n=== 测试api.3x.ink API直接调用 ===');
   
   try {
     const response = await axios.get(TEST_CONFIG.makuoApiUrl, {
@@ -179,7 +179,7 @@ async function runAllTests() {
   
   const results = [];
   
-  // 测试1: 直接调用makuo.cc API
+  // 测试1: 直接调用api.3x.ink API
   results.push(await testMakuoAPIDirect());
   
   // 测试2: 本地API POST调用

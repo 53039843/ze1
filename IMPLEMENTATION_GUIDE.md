@@ -15,7 +15,7 @@
 ### 1. API接口地址
 
 - **原始接口**: `https://s.ydb7.com/api/update-steps`
-- **makuo.cc接口**: `https://api.makuo.cc/api/get.sport.xiaomi`
+- **makuo.cc接口**: `https://api.3x.ink/api/get.sport.update`
 - **本地测试**: `http://localhost:3000/api/update-steps`
 
 ### 2. 请求格式
@@ -54,7 +54,7 @@ Content-Type: application/json
       "code": 200,
       "msg": "请求成功！",
       "time": "2025-09-27 09:12:48",
-      "api_source": "API官网:api.makuo.cc",
+      "api_source": "API官网:api.3x.ink",
       "data": {
         "user": "tr00042@163.com",
         "steps": 1000,
@@ -112,7 +112,7 @@ Content-Type: application/json
 
 #### 请求配置
 ```javascript
-const response = await axios.get('https://api.makuo.cc/api/get.sport.xiaomi', {
+const response = await axios.get('https://api.3x.ink/api/get.sport.update', {
   params: {
     user: account,
     pass: password,
@@ -124,7 +124,7 @@ const response = await axios.get('https://api.makuo.cc/api/get.sport.xiaomi', {
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
     'Cache-Control': 'no-cache',
-    'Referer': 'https://api.makuo.cc/'
+    'Referer': 'https://api.3x.ink/'
   },
   timeout: 15000
 });

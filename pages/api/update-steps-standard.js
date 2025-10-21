@@ -52,20 +52,20 @@ export default async function handler(req, res) {
 
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
-    // 第一步：尝试调用makuo.cc API
+    // 第一步：尝试调用api.3x.ink API
     try {
       const makuoResult = await callMakuoAPI(requestId, account, password, targetSteps);
       
       if (makuoResult.success) {
         const duration = Date.now() - startTime;
-        console.log(`[${requestId}] makuo.cc API调用成功，耗时: ${duration}ms`);
+        console.log(`[${requestId}] api.3x.ink API调用成功，耗时: ${duration}ms`);
         
         // 返回标准格式
         return res.status(200).json(createStandardResponse('成功', account, targetSteps));
       }
 
-      // makuo.cc API失败，检查是否应该回退
-      console.log(`[${requestId}] makuo.cc API失败: ${makuoResult.message}`);
+      // api.3x.ink API失败，检查是否应该回退
+      console.log(`[${requestId}] api.3x.ink API失败: ${makuoResult.message}`);
       
       // 如果是明确的业务错误（如账号密码错误），不进行回退
       if (makuoResult.shouldNotFallback) {
@@ -74,7 +74,7 @@ export default async function handler(req, res) {
       }
 
     } catch (makuoError) {
-      console.log(`[${requestId}] makuo.cc API异常: ${makuoError.message}`);
+      console.log(`[${requestId}] api.3x.ink API异常: ${makuoError.message}`);
     }
 
     // 第二步：回退到ZeppLife API
@@ -144,14 +144,14 @@ function createStandardResponse(status, account, steps) {
 }
 
 /**
- * 调用makuo.cc API
+ * 调用api.3x.ink API
  */
 async function callMakuoAPI(requestId, account, password, targetSteps) {
-  const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
+  const apiUrl = 'https://api.3x.ink/api/get.sport.update';
   const token = 'xbAbPHInyLaesR6PKG6MZg';
 
   try {
-    console.log(`[${requestId}] 正在调用makuo.cc API...`);
+    console.log(`[${requestId}] 正在调用api.3x.ink API...`);
     
     const response = await axios.get(apiUrl, {
       params: {
@@ -165,7 +165,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
         'Accept': 'application/json, text/plain, */*',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
         'Cache-Control': 'no-cache',
-        'Referer': 'https://api.makuo.cc/'
+        'Referer': 'https://api.3x.ink/'
       },
       timeout: 15000, // 15秒超时
       validateStatus: function (status) {
@@ -173,8 +173,8 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       }
     });
 
-    console.log(`[${requestId}] makuo.cc API响应状态: ${response.status}`);
-    console.log(`[${requestId}] makuo.cc API响应数据:`, response.data);
+    console.log(`[${requestId}] api.3x.ink API响应状态: ${response.status}`);
+    console.log(`[${requestId}] api.3x.ink API响应数据:`, response.data);
 
     // 检查HTTP状态码
     if (response.status !== 200) {
@@ -190,7 +190,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       
       return {
         success: false,
-        message: `makuo.cc API调用失败: ${errorMsg}`,
+        message: `api.3x.ink API调用失败: ${errorMsg}`,
         shouldNotFallback,
         data: response.data
       };
@@ -203,12 +203,12 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
     };
 
   } catch (error) {
-    console.error(`[${requestId}] makuo.cc API调用异常:`, error.message);
+    console.error(`[${requestId}] api.3x.ink API调用异常:`, error.message);
     
     // 网络错误或超时，应该回退
     return {
       success: false,
-      message: `makuo.cc API网络错误: ${error.message}`,
+      message: `api.3x.ink API网络错误: ${error.message}`,
       shouldNotFallback: false,
       error: error.message
     };

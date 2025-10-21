@@ -11,7 +11,7 @@
 
 **测试命令**:
 ```bash
-curl -X GET "https://api.makuo.cc/api/get.sport.xiaomi?user=test@example.com&pass=testpass&steps=25000" \
+curl -X GET "https://api.3x.ink/api/get.sport.update?user=test@example.com&pass=testpass&steps=25000" \
   -H "Authorization: LUvOOl2x8II1POI9KfnFeQ"
 ```
 

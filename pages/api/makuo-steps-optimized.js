@@ -1,10 +1,10 @@
-// 全新优化版本：专门针对makuo.cc API的小米运动步数更新接口
+// 全新优化版本：专门针对api.3x.ink API的小米运动步数更新接口
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
 
 /**
  * 小米运动步数更新API处理器
- * 优先使用makuo.cc API，失败时自动回退到ZeppLife API
+ * 优先使用api.3x.ink API，失败时自动回退到ZeppLife API
  */
 export default async function handler(req, res) {
   // 设置CORS头部
@@ -58,16 +58,16 @@ export default async function handler(req, res) {
 
     console.log(`处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
-    // 尝试调用makuo.cc API
+    // 尝试调用api.3x.ink API
     const makuoResult = await callMakuoAPI(account, password, targetSteps);
     if (makuoResult.success) {
       const duration = Date.now() - startTime;
-      console.log(`makuo.cc API调用成功，耗时: ${duration}ms`);
+      console.log(`api.3x.ink API调用成功，耗时: ${duration}ms`);
       return res.status(200).json(makuoResult);
     }
 
-    // makuo.cc API失败，尝试回退到ZeppLife API
-    console.log('makuo.cc API失败，开始回退到ZeppLife API...');
+    // api.3x.ink API失败，尝试回退到ZeppLife API
+    console.log('api.3x.ink API失败，开始回退到ZeppLife API...');
     const zeppResult = await callZeppLifeAPI(account, password, targetSteps);
     
     const duration = Date.now() - startTime;
@@ -87,14 +87,14 @@ export default async function handler(req, res) {
 }
 
 /**
- * 调用makuo.cc API
+ * 调用api.3x.ink API
  */
 async function callMakuoAPI(account, password, targetSteps) {
-  const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
+  const apiUrl = 'https://api.3x.ink/api/get.sport.update';
   const token = 'xbAbPHInyLaesR6PKG6MZg';
 
   try {
-    console.log('正在调用makuo.cc API...');
+    console.log('正在调用api.3x.ink API...');
     
     const response = await axios.get(apiUrl, {
       params: {
@@ -115,8 +115,8 @@ async function callMakuoAPI(account, password, targetSteps) {
       }
     });
 
-    console.log('makuo.cc API响应状态:', response.status);
-    console.log('makuo.cc API响应数据:', response.data);
+    console.log('api.3x.ink API响应状态:', response.status);
+    console.log('api.3x.ink API响应数据:', response.data);
 
     // 检查响应状态
     if (response.status !== 200) {
@@ -137,18 +137,18 @@ async function callMakuoAPI(account, password, targetSteps) {
         user: account,
         steps: targetSteps,
         update_time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
-        api_source: 'makuo.cc API',
+        api_source: 'api.3x.ink API',
         response_data: response.data
       }
     };
 
   } catch (error) {
-    console.error('makuo.cc API调用失败:', error.message);
+    console.error('api.3x.ink API调用失败:', error.message);
     
     // 返回失败结果，但不抛出异常
     return {
       success: false,
-      message: `makuo.cc API调用失败: ${error.message}`,
+      message: `api.3x.ink API调用失败: ${error.message}`,
       error: error.message
     };
   }

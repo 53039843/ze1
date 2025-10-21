@@ -45,7 +45,7 @@ async function testSimpleAPI() {
         "userid": "1196198107",
         "makuo_response": {"code": 200, "msg": "请求成功"},
         "time": "2025-09-27 09:41:23",
-        "api_source": "API官网:api.makuo.cc",
+        "api_source": "API官网:api.3x.ink",
         "data": {"user": "tr00042@163.com", "steps": 75383, "userid": "1196198107"},
         "cached_time": "2025-09-27 09:41:23"
       }

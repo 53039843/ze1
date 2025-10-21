@@ -1,4 +1,4 @@
-// 简化的测试API接口，专门用于测试makuo.cc API
+// 简化的测试API接口，专门用于测试api.3x.ink API
 const axios = require('axios');
 
 export default async function handler(req, res) {
@@ -49,11 +49,11 @@ export default async function handler(req, res) {
 
     console.log(`[测试API] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
-    // 调用makuo.cc API
-    const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
+    // 调用api.3x.ink API
+    const apiUrl = 'https://api.3x.ink/api/get.sport.update';
     const token = 'xbAbPHInyLaesR6PKG6MZg';
 
-    console.log('[测试API] 正在调用makuo.cc API...');
+    console.log('[测试API] 正在调用api.3x.ink API...');
     
     const response = await axios.get(apiUrl, {
       params: {
@@ -74,8 +74,8 @@ export default async function handler(req, res) {
       }
     });
 
-    console.log('[测试API] makuo.cc API响应状态:', response.status);
-    console.log('[测试API] makuo.cc API响应数据:', response.data);
+    console.log('[测试API] api.3x.ink API响应状态:', response.status);
+    console.log('[测试API] api.3x.ink API响应数据:', response.data);
 
     // 返回详细的测试结果
     const result = {
@@ -99,7 +99,7 @@ export default async function handler(req, res) {
         user: account,
         steps: targetSteps,
         update_time: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
-        api_source: 'makuo.cc API (测试)',
+        api_source: 'api.3x.ink API (测试)',
         response_data: response.data
       }
     };

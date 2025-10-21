@@ -28,11 +28,11 @@ GET https://s.ydb7.com/api/update-steps?account=tr00042@163.com&password=aEqNzMq
 }
 ```
 
-### 2. makuo.cc API接口 (https://api.makuo.cc/api/get.sport.xiaomi)
+### 2. makuo.cc API接口 (https://api.3x.ink/api/get.sport.update)
 
 **请求格式:**
 ```
-GET https://api.makuo.cc/api/get.sport.xiaomi?user=tr00042@163.com&pass=aEqNzMqDeT.&steps=1000
+GET https://api.3x.ink/api/get.sport.update?user=tr00042@163.com&pass=aEqNzMqDeT.&steps=1000
 Headers: Authorization: LUvOOl2x8II1POI9KfnFeQ
 ```
 
@@ -42,7 +42,7 @@ Headers: Authorization: LUvOOl2x8II1POI9KfnFeQ
   "code": 200,
   "msg": "请求成功！",
   "time": "2025-09-27 09:12:48",
-  "api_source": "API官网:api.makuo.cc",
+  "api_source": "API官网:api.3x.ink",
   "data": {
     "user": "tr00042@163.com",
     "steps": 1000,

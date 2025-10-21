@@ -1,4 +1,4 @@
-// 优化版本：使用makuo.cc API的小米运动步数更新接口，支持自动回退到ZeppLife
+// 优化版本：使用api.3x.ink API的小米运动步数更新接口，支持自动回退到ZeppLife
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
 
@@ -23,11 +23,11 @@ export default async function handler(req, res) {
       
     console.log('目标步数:', targetSteps);
 
-    // 使用makuo.cc API - 严格按照API文档实现
-    const apiUrl = 'https://api.makuo.cc/api/get.sport.xiaomi';
+    // 使用api.3x.ink API - 严格按照API文档实现
+    const apiUrl = 'https://api.3x.ink/api/get.sport.update';
     const token = 'xbAbPHInyLaesR6PKG6MZg'; // 用户提供的token
     
-    console.log('调用makuo.cc API...');
+    console.log('调用api.3x.ink API...');
     console.log('请求参数:', { user: account, pass: password, steps: targetSteps });
 
     try {
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
         timeout: 20000 // 20秒超时
       });
 
-      console.log('makuo.cc API响应:', response.data);
+      console.log('api.3x.ink API响应:', response.data);
 
       // 严格按照API文档检查响应 - 只有code为200才算成功
       if (response.data && response.data.code === 200) {
@@ -59,21 +59,21 @@ export default async function handler(req, res) {
             user: account,
             steps: targetSteps,
             update_time: new Date().toLocaleString('zh-CN'),
-            api_source: 'makuo.cc API',
+            api_source: 'api.3x.ink API',
             response_data: response.data
           }
         };
-        console.log('makuo.cc API调用成功，返回响应:', result);
+        console.log('api.3x.ink API调用成功，返回响应:', result);
         return res.status(200).json(result);
       } else {
         // API返回非成功状态，抛出错误以触发回退
         const errorMsg = response.data?.msg || response.data?.message || '未知错误';
-        console.log(`makuo.cc API返回错误状态: code=${response.data?.code}, msg=${errorMsg}`);
-        throw new Error(`makuo.cc API返回错误: ${errorMsg}`);
+        console.log(`api.3x.ink API返回错误状态: code=${response.data?.code}, msg=${errorMsg}`);
+        throw new Error(`api.3x.ink API返回错误: ${errorMsg}`);
       }
       
     } catch (error) {
-      console.error('makuo.cc API调用失败:', error.message);
+      console.error('api.3x.ink API调用失败:', error.message);
       
       // 如果是明确的业务错误（如账号密码错误），直接返回错误，不进行回退
       if (error.response && error.response.status === 400) {
@@ -86,12 +86,12 @@ export default async function handler(req, res) {
       }
       
       // 对于网络错误、超时、服务器错误等，进行回退
-      console.log('makuo.cc API失败，尝试回退到ZeppLife API...');
+      console.log('api.3x.ink API失败，尝试回退到ZeppLife API...');
       throw error; // 重新抛出错误以触发回退逻辑
     }
     
   } catch (makuoError) {
-    // makuo.cc API失败，尝试使用ZeppLife API作为回退
+    // api.3x.ink API失败，尝试使用ZeppLife API作为回退
     console.log('开始执行回退逻辑，使用ZeppLife API...');
     
     try {
