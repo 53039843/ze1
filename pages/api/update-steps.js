@@ -2,7 +2,8 @@
 // 官网:www.ydb7.com
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
-const { callTminiAPI } = require('./tmini-api-util');
+// const { callTminiAPI } = require('./tmini-api-util');
+const { callMakuoAPI, isBusinessError } = require('./makuo-steps-makuo'); // 引入api.3x.ink的调用逻辑
 const { logOps, userOps } = require("../../lib/database-simple");
 
 /**
@@ -60,13 +61,13 @@ export default async function handler(req, res) {
 
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
-    // 第一步:尝试调用新的tmini.net API
+    // 第一步:尝试调用api.3x.ink API
     try {
-      const tminiResult = await callTminiAPI(requestId, account, password, targetSteps);
+      const makuoResult = await callMakuoAPI(requestId, account, password, targetSteps);
       
-      if (tminiResult.success) {
+      if (makuoResult.success) {
         const duration = Date.now() - startTime;
-        console.log(`[${requestId}] tmini.net API调用成功,耗时: ${duration}ms`);
+        console.log(`[${requestId}] api.3x.ink API调用成功,耗时: ${duration}ms`);
         
         // 返回标准格式
         await logOps.add({
@@ -81,11 +82,11 @@ export default async function handler(req, res) {
         return res.status(200).send(createStandardResponse('成功', account, targetSteps, requestPriority));
       }
 
-      // tmini.net API失败,检查是否应该回退
-      console.log(`[${requestId}] tmini.net API失败: ${tminiResult.message}`);
+      // api.3x.ink API失败,检查是否应该回退
+      console.log(`[${requestId}] api.3x.ink API失败: ${makuoResult.message}`);
       
       // 如果是明确的业务错误(如账号密码错误),不进行回退
-      if (tminiResult.shouldNotFallback) {
+      if (makuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退,直接返回错误`);
         await logOps.add({
           account,
@@ -99,8 +100,8 @@ export default async function handler(req, res) {
         return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
       }
 
-    } catch (tminiError) {
-      console.log(`[${requestId}] tmini.net API异常: ${tminiError.message}`);
+    } catch (makuoError) {
+      console.log(`[${requestId}] api.3x.ink API异常: ${makuoError.message}`);
     }
 
     // 第二步:回退到ZeppLife API
