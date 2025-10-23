@@ -29,21 +29,22 @@ export default async function handler(req, res) {
 
   const startTime = Date.now();
   const requestId = generateRequestId();
-  const requestPriority = req.method === 'POST' ? req.body?.priority || 1 : req.query?.priority || 1;
+  // 统一处理优先级，避免后续变量冲突
   console.log(`[${requestId}] 开始处理${req.method}请求`);
 
   try {
     // 提取请求参数
-    const { account, password, steps, priority } = req.method === 'POST' ? req.body : req.query;
+    const { account, password, steps } = req.method === 'POST' ? req.body : req.query;
+    const priority = req.method === 'POST' ? req.body?.priority : req.query?.priority;
 
-    // 设置优先级,默认为1
-    const requestPriority = priority || 1;
-    console.log(`[${requestId}] 请求优先级: ${requestPriority}`);
+    // 设置最终优先级,默认为1
+    const finalRequestPriority = priority || 1;
+    console.log(`[${requestId}] 请求优先级: ${finalRequestPriority}`);
 
     // 参数验证
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
-      return res.status(400).send(createStandardResponse('失败', account || '', 0, requestPriority, '账号和密码不能为空', '#000000'));
+      return res.status(400).send(createStandardResponse('失败', account || '', 0, finalRequestPriority, '账号和密码不能为空'));
     }
 
     // 处理步数参数
@@ -52,7 +53,7 @@ export default async function handler(req, res) {
       targetSteps = parseInt(steps, 10);
       if (isNaN(targetSteps) || targetSteps < 0) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
-        return res.status(400).send(createStandardResponse("失败", account, 0, requestPriority));
+        return res.status(400).send(createStandardResponse("失败", account, 0, finalRequestPriority));
       }
     } else {
       // 生成合理范围内的随机步数
@@ -79,7 +80,7 @@ export default async function handler(req, res) {
           cost: 0.006,
           balance_after: userOps.getStats(account)?.balance
         });
-        return res.status(200).send(createStandardResponse('成功', account, targetSteps, requestPriority));
+        return res.status(200).send(createStandardResponse('成功', account, targetSteps, finalRequestPriority));
       }
 
       // api.3x.ink API失败,检查是否应该回退
@@ -97,7 +98,7 @@ export default async function handler(req, res) {
           cost: 0,
           balance_after: userOps.getStats(account)?.balance
         });
-        return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
+        return res.status(500).send(createStandardResponse('失败', account, 0, finalRequestPriority));
       }
 
     } catch (makuoError) {
@@ -136,7 +137,7 @@ export default async function handler(req, res) {
         cost: 0.006,
         balance_after: userOps.getStats(account)?.balance
       });
-      return res.status(200).send(createStandardResponse('成功', account, targetSteps, requestPriority));
+      return res.status(200).send(createStandardResponse('成功', account, targetSteps, finalRequestPriority));
       
     } catch (zeppError) {
       console.error(`[${requestId}] ZeppLife API调用失败:`, zeppError.message);
@@ -154,7 +155,7 @@ export default async function handler(req, res) {
         cost: 0,
         balance_after: userOps.getStats(account)?.balance
       });
-      return res.status(500).send(createStandardResponse('失败', account, 0, requestPriority));
+      return res.status(500).send(createStandardResponse('失败', account, 0, finalRequestPriority));
     }
 
   } catch (error) {
@@ -162,9 +163,9 @@ export default async function handler(req, res) {
     console.error(`[${requestId}] 请求处理失败,耗时: ${duration}ms`, error);
     
     const account = req.method === 'POST' ? req.body?.account || '' : req.query?.account || '';
-    const priority = req.method === 'POST' ? req.body?.priority || 1 : req.query?.priority || 1;
+    const finalRequestPriority = req.method === 'POST' ? req.body?.priority || 1 : req.query?.priority || 1;
     
-    return res.status(500).send(createStandardResponse('失败', account, 0, priority));
+    return res.status(500).send(createStandardResponse('失败', account, 0, finalRequestPriority));
   }
 }
 
