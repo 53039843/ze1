@@ -158,7 +158,7 @@ export default async function handler(req, res) {
  * 调用api.3x.ink API
  */
 async function callMakuoAPI(requestId, account, password, targetSteps) {
-  const apiUrl = 'https://api.3x.ink/api/get.sport.update';
+  const apiUrl = 'https://api.makuo.cc/api/get.sport.update';
   const token = 'xbAbPHInyLaesR6PKG6MZg';
 
   try {
