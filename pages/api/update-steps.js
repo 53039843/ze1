@@ -3,7 +3,7 @@
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
 // const { callTminiAPI } = require('./tmini-api-util');
-const { callMakuoAPI, isBusinessError } = require('./makuo-steps-makuo'); // 引入api.3x.ink的调用逻辑
+const { callMakuoAPI, isBusinessError } = require('./update-steps-makuo'); // 引入api.3x.ink的调用逻辑
 const { logOps, userOps } = require("../../lib/database-simple");
 
 /**
@@ -189,9 +189,6 @@ function createStandardResponse(status, account, steps, priority = 1, customMess
   }
 
   let statusLine = `刷步状态:${responseStatus}`;
-  if (messageColor) {
-    statusLine = `<span style="color:${messageColor}">${statusLine}</span>`;
-  }
 
   const response = `${statusLine}
 账号:${account}
