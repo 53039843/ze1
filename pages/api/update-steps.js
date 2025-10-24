@@ -1,5 +1,5 @@
 // 标准格式API接口:返回美观的一行一个值格式
-// 官网:www.ydb7.com
+// 官网:api.ydb7.com
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
 // const { callTminiAPI } = require('./tmini-api-util');
@@ -196,7 +196,7 @@ function createStandardResponse(status, account, steps, priority = 1, customMess
 时间:${currentTime}
 步数:${steps}
 优先级:${priority}
-官网:www.ydb7.com`;
+官网:api.ydb7.com`;
 
   return response;
 }
