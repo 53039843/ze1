@@ -53,8 +53,32 @@ export default async function handler(req, res) {
 
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
-    // 第一步：尝试调用api.3x.ink API
+    // 第一步：尝试调用小驼API (api.xiaotuo.net)
     try {
+      const xiaotuoResult = await callXiaotuoAPI(requestId, account, password, targetSteps);
+
+      if (xiaotuoResult.success) {
+        const duration = Date.now() - startTime;
+        console.log(`[${requestId}] 小驼API调用成功，耗时: ${duration}ms`);
+        return res.status(200).json(createStandardResponse('成功', account, targetSteps));
+      }
+
+      // 小驼API失败，检查是否应该回退
+      console.log(`[${requestId}] 小驼API失败: ${xiaotuoResult.message}`);
+      
+      // 对于小驼API，我们默认所有失败都应该回退到下一个API (api.3x.ink)
+      // if (xiaotuoResult.shouldNotFallback) {
+      //   console.log(`[${requestId}] 不进行回退，直接返回错误`);
+      //   return res.status(500).json(createStandardResponse('失败', account, 0));
+      // }
+
+    } catch (xiaotuoError) {
+      console.log(`[${requestId}] 小驼API异常: ${xiaotuoError.message}`);
+    }
+
+    // 第二步：回退到api.3x.ink API
+    try {
+      console.log(`[${requestId}] 开始回退到api.3x.ink API...`);
       const makuoResult = await callMakuoAPI(requestId, account, password, targetSteps);
       
       if (makuoResult.success) {
@@ -76,23 +100,6 @@ export default async function handler(req, res) {
 
     } catch (makuoError) {
       console.log(`[${requestId}] api.3x.ink API异常: ${makuoError.message}`);
-    }
-
-    // 第二步：回退到小驼API (api.xiaotuo.net)
-    try {
-      console.log(`[${requestId}] 开始回退到小驼API...`);
-      const xiaotuoResult = await callXiaotuoAPI(requestId, account, password, targetSteps);
-
-      if (xiaotuoResult.success) {
-        const duration = Date.now() - startTime;
-        console.log(`[${requestId}] 小驼API调用成功，耗时: ${duration}ms`);
-        return res.status(200).json(createStandardResponse('成功', account, targetSteps));
-      }
-
-      console.log(`[${requestId}] 小驼API失败: ${xiaotuoResult.message}`);
-
-    } catch (xiaotuoError) {
-      console.error(`[${requestId}] 小驼API异常: ${xiaotuoError.message}`);
     }
 
     // 第三步：回退到ZeppLife API
