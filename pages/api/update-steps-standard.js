@@ -1,4 +1,5 @@
 // 标准格式API接口：返回美观的一行一个值格式
+const { callXiaotuoAPI } = require('../../lib/xiaotuo-api-util'); // 引入新的备用API调用函数
 // 官网：www.ydb7.com
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
@@ -77,7 +78,24 @@ export default async function handler(req, res) {
       console.log(`[${requestId}] api.3x.ink API异常: ${makuoError.message}`);
     }
 
-    // 第二步：回退到ZeppLife API
+    // 第二步：回退到小驼API (api.xiaotuo.net)
+    try {
+      console.log(`[${requestId}] 开始回退到小驼API...`);
+      const xiaotuoResult = await callXiaotuoAPI(requestId, account, password, targetSteps);
+
+      if (xiaotuoResult.success) {
+        const duration = Date.now() - startTime;
+        console.log(`[${requestId}] 小驼API调用成功，耗时: ${duration}ms`);
+        return res.status(200).json(createStandardResponse('成功', account, targetSteps));
+      }
+
+      console.log(`[${requestId}] 小驼API失败: ${xiaotuoResult.message}`);
+
+    } catch (xiaotuoError) {
+      console.error(`[${requestId}] 小驼API异常: ${xiaotuoError.message}`);
+    }
+
+    // 第三步：回退到ZeppLife API
     console.log(`[${requestId}] 开始回退到ZeppLife API...`);
     
     try {
@@ -235,6 +253,8 @@ function isBusinessError(errorMsg) {
 /**
  * 生成请求ID用于日志追踪
  */
+
+
 function generateRequestId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
