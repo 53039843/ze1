@@ -164,7 +164,7 @@ function createStandardResponse(status, account, steps) {
     "账号": account,
     "时间": currentTime,
     "步数": steps,
-    "官网": "www.ydb7.com"
+    "官网": "api.ydb7.com"
   };
 }
 
