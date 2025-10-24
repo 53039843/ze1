@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
-    return res.status(405).json(createStandardResponse('失败', '', 0));
+    return res.status(405).json(createStandardResponse('失败', '', 0, 405));
   }
 
   const startTime = Date.now();
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     // 参数验证
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
-      return res.status(400).json(createStandardResponse('失败', account || '', 0));
+      return res.status(400).json(createStandardResponse('失败', account || '', 0, 400));
     }
 
     // 处理步数参数
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       targetSteps = parseInt(steps, 10);
       if (isNaN(targetSteps) || targetSteps < 0 || targetSteps > 100000) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
-        return res.status(400).json(createStandardResponse('失败', account, 0));
+        return res.status(400).json(createStandardResponse('失败', account, 0, 400));
       }
     } else {
       // 生成合理范围内的随机步数
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
       if (xiaotuoResult.success) {
         const duration = Date.now() - startTime;
         console.log(`[${requestId}] 小驼API调用成功，耗时: ${duration}ms`);
-        return res.status(200).json(createStandardResponse('成功', account, targetSteps));
+        return res.status(200).json(createStandardResponse('成功', account, targetSteps, 200));
       }
 
       // 小驼API失败，检查是否应该回退
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
       // 对于小驼API，我们默认所有失败都应该回退到下一个API (api.3x.ink)
       // if (xiaotuoResult.shouldNotFallback) {
       //   console.log(`[${requestId}] 不进行回退，直接返回错误`);
-      //   return res.status(500).json(createStandardResponse('失败', account, 0));
+      //   return res.status(500).json(createStandardResponse('失败', account, 0, 500));
       // }
 
     } catch (xiaotuoError) {
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
         console.log(`[${requestId}] api.3x.ink API调用成功，耗时: ${duration}ms`);
         
         // 返回标准格式
-        return res.status(200).json(createStandardResponse('成功', account, targetSteps));
+        return res.status(200).json(createStandardResponse('成功', account, targetSteps, 200));
       }
 
       // api.3x.ink API失败，检查是否应该回退
@@ -95,7 +95,7 @@ export default async function handler(req, res) {
       // 如果是明确的业务错误（如账号密码错误），不进行回退
       if (makuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退，直接返回错误`);
-        return res.status(500).json(createStandardResponse('失败', account, 0));
+        return res.status(500).json(createStandardResponse('失败', account, 0, 500));
       }
 
     } catch (makuoError) {
@@ -125,7 +125,7 @@ export default async function handler(req, res) {
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] ZeppLife API调用成功，总耗时: ${duration}ms`);
       
-      return res.status(200).json(createStandardResponse('成功', account, targetSteps));
+      return res.status(200).json(createStandardResponse('成功', account, targetSteps, 200));
       
     } catch (zeppError) {
       console.error(`[${requestId}] ZeppLife API调用失败:`, zeppError.message);
@@ -134,21 +134,21 @@ export default async function handler(req, res) {
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] 所有API均失败，总耗时: ${duration}ms`);
       
-      return res.status(500).json(createStandardResponse('失败', account, 0));
+      return res.status(500).json(createStandardResponse('失败', account, 0, 500));
     }
 
   } catch (error) {
     const duration = Date.now() - startTime;
     console.error(`[${requestId}] 请求处理失败，耗时: ${duration}ms`, error);
     
-    return res.status(500).json(createStandardResponse('失败', req.method === 'POST' ? req.body?.account || '' : req.query?.account || '', 0));
+    return res.status(500).json(createStandardResponse('失败', req.method === 'POST' ? req.body?.account || '' : req.query?.account || '', 0, 500));
   }
 }
 
 /**
  * 创建标准格式的响应
  */
-function createStandardResponse(status, account, steps) {
+function createStandardResponse(status, account, steps, code) {
   const currentTime = new Date().toLocaleString('zh-CN', { 
     timeZone: 'Asia/Shanghai',
     year: 'numeric',
@@ -164,7 +164,8 @@ function createStandardResponse(status, account, steps) {
     "账号": account,
     "时间": currentTime,
     "步数": steps,
-    "官网": "api.ydb7.com"
+    "官网": "api.ydb7.com",
+    "code": code
   };
 }
 
