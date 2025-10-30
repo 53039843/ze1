@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
   // 处理OPTIONS预检请求
   if (req.method === 'OPTIONS') {
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
   // 只支持POST和GET请求
   if (req.method !== 'POST' && req.method !== 'GET') {
-    return res.status(405).send(createStandardResponse('失败', '', 0, 1));
+    return res.status(405).json(createStandardResponse(500, '方法不允许', '', 0));
   }
 
   const startTime = Date.now();
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     // 参数验证
     if (!account || !password) {
       console.log(`[${requestId}] 参数验证失败: 缺少账号或密码`);
-      return res.status(400).send(createStandardResponse('失败', account || '', 0, finalRequestPriority, '账号和密码不能为空'));
+      return res.status(400).json(createStandardResponse(500, '账号和密码不能为空', account || '', 0));
     }
 
     // 处理步数参数
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       targetSteps = parseInt(steps, 10);
       if (isNaN(targetSteps) || targetSteps < 0) {
         console.log(`[${requestId}] 步数参数无效: ${steps}`);
-        return res.status(400).send(createStandardResponse("失败", account, 0, finalRequestPriority));
+        return res.status(400).json(createStandardResponse(500, '步数参数无效', account, 0));
       }
     } else {
       // 生成合理范围内的随机步数
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
           cost: 0.006,
           balance_after: userOps.getStats(account)?.balance
         });
-        return res.status(200).send(createStandardResponse('成功', account, targetSteps, finalRequestPriority));
+        return res.status(200).json(createStandardResponse(200, '刷步成功', account, targetSteps));
       }
 
       // api.3x.ink API失败,检查是否应该回退
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
           cost: 0,
           balance_after: userOps.getStats(account)?.balance
         });
-        return res.status(500).send(createStandardResponse('失败', account, 0, finalRequestPriority));
+        return res.status(500).json(createStandardResponse(500, '刷步失败', account, 0));
       }
 
     } catch (makuoError) {
@@ -137,7 +137,7 @@ export default async function handler(req, res) {
         cost: 0.006,
         balance_after: userOps.getStats(account)?.balance
       });
-      return res.status(200).send(createStandardResponse('成功', account, targetSteps, finalRequestPriority));
+      return res.status(200).json(createStandardResponse(200, '刷步成功', account, targetSteps));
       
     } catch (zeppError) {
       console.error(`[${requestId}] ZeppLife API调用失败:`, zeppError.message);
@@ -155,7 +155,7 @@ export default async function handler(req, res) {
         cost: 0,
         balance_after: userOps.getStats(account)?.balance
       });
-      return res.status(500).send(createStandardResponse('失败', account, 0, finalRequestPriority));
+      return res.status(500).json(createStandardResponse(500, '服务器内部错误', account, 0));
     }
 
   } catch (error) {
@@ -165,14 +165,15 @@ export default async function handler(req, res) {
     const account = req.method === 'POST' ? req.body?.account || '' : req.query?.account || '';
     const finalRequestPriority = req.method === 'POST' ? req.body?.priority || 1 : req.query?.priority || 1;
     
-    return res.status(500).send(createStandardResponse('失败', account, 0, finalRequestPriority));
+    return res.status(500).json(createStandardResponse(500, '服务器内部错误', account, 0));
   }
 }
 
 /**
- * 创建标准格式的响应(一行一个值)
+ * 创建标准格式的响应 - JSON格式
+ * 参考：https://api.makuo.cc/doc/get.sport.update
  */
-function createStandardResponse(status, account, steps, priority = 1, customMessage = null, messageColor = null) {
+function createStandardResponse(code, msg, account, steps) {
   const currentTime = new Date().toLocaleString('zh-CN', { 
     timeZone: 'Asia/Shanghai',
     year: 'numeric',
@@ -180,25 +181,21 @@ function createStandardResponse(status, account, steps, priority = 1, customMess
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit'
-  });
+    second: '2-digit',
+    hour12: false
+  }).replace(/\//g, '-');
 
-  // 返回纯文本格式,一行一个值
-  let responseStatus = status;
-  if (customMessage) {
-    responseStatus = customMessage;
-  }
-
-  let statusLine = `刷步状态:${responseStatus}`;
-
-  const response = `${statusLine}
-账号:${account}
-时间:${currentTime}
-步数:${steps}
-优先级:${priority}
-官网:api.ydb7.com`;
-
-  return response;
+  return {
+    code: code,
+    msg: msg,
+    time: currentTime,
+    api_source: "官方API网:https://api.ydb7.com/",
+    data: {
+      user: account,
+      steps: steps,
+      update_time: currentTime
+    }
+  };
 }
 
 

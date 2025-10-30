@@ -259,3 +259,9 @@ function isBusinessError(errorMsg) {
 function generateRequestId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
+
+// 导出函数供其他模块使用
+module.exports = {
+  callMakuoAPI,
+  isBusinessError
+};
