@@ -2,8 +2,7 @@
 // 官网:api.ydb7.com
 const axios = require('axios');
 const zeppLifeSteps = require('./ZeppLifeSteps');
-// const { callTminiAPI } = require('./tmini-api-util');
-const { callMakuoAPI, isBusinessError } = require('./update-steps-makuo'); // 引入api.3x.ink的调用逻辑
+const { callXiaotuoAPI } = require('../../lib/xiaotuo-api-util');
 const { logOps, userOps } = require("../../lib/database-simple");
 
 /**
@@ -62,47 +61,55 @@ export default async function handler(req, res) {
 
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
-    // 第一步:尝试调用api.3x.ink API
+    // 第一步:尝试调用小驼API (api.xiaotuo.net)
     try {
-      const makuoResult = await callMakuoAPI(requestId, account, password, targetSteps);
+      const xiaotuoResult = await callXiaotuoAPI(requestId, account, password, targetSteps);
       
-      if (makuoResult.success) {
+      if (xiaotuoResult.success) {
         const duration = Date.now() - startTime;
-        console.log(`[${requestId}] api.3x.ink API调用成功,耗时: ${duration}ms`);
+        console.log(`[${requestId}] 小驼API调用成功,耗时: ${duration}ms`);
         
         // 返回标准格式
-        await logOps.add({
-          account,
-          api_name: 'update-steps',
-          ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-          status: 'success',
-          steps: targetSteps,
-          cost: 0.006,
-          balance_after: userOps.getStats(account)?.balance
-        });
+        try {
+          await logOps.add({
+            account,
+            api_name: 'update-steps',
+            ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            status: 'success',
+            steps: targetSteps,
+            cost: 0.006,
+            balance_after: userOps.getStats(account)?.balance
+          });
+        } catch (dbError) {
+          console.log(`[${requestId}] 数据库记录失败:`, dbError.message);
+        }
         return res.status(200).json(createStandardResponse(200, '刷步成功', account, targetSteps));
       }
 
-      // api.3x.ink API失败,检查是否应该回退
-      console.log(`[${requestId}] api.3x.ink API失败: ${makuoResult.message}`);
+      // 小驼API失败,检查是否应该回退
+      console.log(`[${requestId}] 小驼API失败: ${xiaotuoResult.message}`);
       
       // 如果是明确的业务错误(如账号密码错误),不进行回退
-      if (makuoResult.shouldNotFallback) {
+      if (xiaotuoResult.shouldNotFallback) {
         console.log(`[${requestId}] 不进行回退,直接返回错误`);
-        await logOps.add({
-          account,
-          api_name: 'update-steps',
-          ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-          status: 'failed',
-          steps: targetSteps,
-          cost: 0,
-          balance_after: userOps.getStats(account)?.balance
-        });
+        try {
+          await logOps.add({
+            account,
+            api_name: 'update-steps',
+            ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            status: 'failed',
+            steps: targetSteps,
+            cost: 0,
+            balance_after: userOps.getStats(account)?.balance
+          });
+        } catch (dbError) {
+          console.log(`[${requestId}] 数据库记录失败:`, dbError.message);
+        }
         return res.status(500).json(createStandardResponse(500, '刷步失败', account, 0));
       }
 
-    } catch (makuoError) {
-      console.log(`[${requestId}] api.3x.ink API异常: ${makuoError.message}`);
+    } catch (xiaotuoError) {
+      console.log(`[${requestId}] 小驼API异常: ${xiaotuoError.message}`);
     }
 
     // 第二步:回退到ZeppLife API
@@ -128,15 +135,19 @@ export default async function handler(req, res) {
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] ZeppLife API调用成功,总耗时: ${duration}ms`);
       
-      await logOps.add({
-        account,
-        api_name: 'update-steps',
-        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-        status: 'success',
-        steps: targetSteps,
-        cost: 0.006,
-        balance_after: userOps.getStats(account)?.balance
-      });
+      try {
+        await logOps.add({
+          account,
+          api_name: 'update-steps',
+          ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+          status: 'success',
+          steps: targetSteps,
+          cost: 0.006,
+          balance_after: userOps.getStats(account)?.balance
+        });
+      } catch (dbError) {
+        console.log(`[${requestId}] 数据库记录失败:`, dbError.message);
+      }
       return res.status(200).json(createStandardResponse(200, '刷步成功', account, targetSteps));
       
     } catch (zeppError) {
@@ -146,15 +157,19 @@ export default async function handler(req, res) {
       const duration = Date.now() - startTime;
       console.log(`[${requestId}] 所有API均失败,总耗时: ${duration}ms`);
       
-      await logOps.add({
-        account,
-        api_name: 'update-steps',
-        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-        status: 'failed',
-        steps: targetSteps,
-        cost: 0,
-        balance_after: userOps.getStats(account)?.balance
-      });
+      try {
+        await logOps.add({
+          account,
+          api_name: 'update-steps',
+          ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+          status: 'failed',
+          steps: targetSteps,
+          cost: 0,
+          balance_after: userOps.getStats(account)?.balance
+        });
+      } catch (dbError) {
+        console.log(`[${requestId}] 数据库记录失败:`, dbError.message);
+      }
       return res.status(500).json(createStandardResponse(500, '服务器内部错误', account, 0));
     }
 
@@ -202,4 +217,3 @@ function createStandardResponse(code, msg, account, steps) {
 function generateRequestId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
-
