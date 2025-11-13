@@ -44,7 +44,10 @@ export default async function handler(req, res) {
           'Accept': 'application/json, text/plain, */*',
           'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
         },
-        timeout: 20000 // 20秒超时
+        timeout: 20000, // 20秒超时
+        validateStatus: function (status) {
+          return status >= 200 && status < 600; // 接受所有状态码,避免axios自动抛出错误
+        }
       });
 
       console.log('api.3x.ink API响应:', response.data);

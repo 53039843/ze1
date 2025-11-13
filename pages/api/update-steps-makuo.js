@@ -180,7 +180,7 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
       },
       timeout: 15000, // 15秒超时
       validateStatus: function (status) {
-        return status < 500; // 只有5xx错误才会被reject
+        return status >= 200 && status < 600; // 接受所有状态码,由业务逻辑判断成功失败
       }
     });
 
