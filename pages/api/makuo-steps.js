@@ -34,12 +34,12 @@ export default async function handler(req, res) {
       // 按照API文档使用GET请求，参数通过query传递
       const response = await axios.get(apiUrl, {
         params: {
+          token: token,
           user: account,
           pass: password,
           steps: targetSteps.toString() // 确保步数为字符串格式
         },
         headers: {
-          'Authorization': token,
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
           'Accept': 'application/json, text/plain, */*',
           'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'

@@ -181,12 +181,12 @@ async function callMakuoAPI(requestId, account, password, targetSteps) {
     
     const response = await axios.get(apiUrl, {
       params: {
+        token: token,
         user: account,
         pass: password,
         steps: targetSteps.toString()
       },
       headers: {
-        'Authorization': token,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'application/json, text/plain, */*',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
