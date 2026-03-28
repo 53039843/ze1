@@ -1,8 +1,52 @@
 // 标准格式API接口:返回美观的一行一个值格式
 // 官网:api.ydb7.com
 // 统一使用 api.yunmge.com API
-const axios = require('axios');
+import https from 'https';
+import crypto from 'crypto';
 const { logOps, userOps } = require("../../lib/database-simple");
+
+// 封装 https 请求为 Promise
+function httpsGet(url) {
+  return new Promise((resolve, reject) => {
+    const urlObj = new URL(url);
+    const options = {
+      hostname: urlObj.hostname,
+      port: urlObj.port || 443,
+      path: urlObj.pathname + urlObj.search,
+      method: 'GET',
+      rejectUnauthorized: false,
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+      ciphers: 'DEFAULT:@SECLEVEL=0',
+      minVersion: 'TLSv1',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+        'Cache-Control': 'no-cache'
+      },
+      timeout: 30000
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          reject(new Error('响应解析失败: ' + data.substring(0, 100)));
+        }
+      });
+    });
+
+    req.on('error', (e) => reject(e));
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error('请求超时'));
+    });
+    req.end();
+  });
+}
 
 /**
  * 标准格式的步数更新API处理器
@@ -61,37 +105,19 @@ export default async function handler(req, res) {
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
     // 调用 api.yunmge.com API
-    const apiUrl = 'https://api.yunmge.com/api/zepplifepro';
     const token = '6772b1000722a841a5c608fc942dd114';
+    const apiUrl = `https://api.yunmge.com/api/zepplifepro?token=${token}&user=${encodeURIComponent(account)}&pass=${encodeURIComponent(password)}&steps=${targetSteps}`;
     
     try {
       console.log(`[${requestId}] 调用 api.yunmge.com API...`);
       
-      const response = await axios.get(apiUrl, {
-        params: {
-          token: token,
-          user: account,
-          pass: password,
-          steps: targetSteps.toString()
-        },
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept': 'application/json, text/plain, */*',
-          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-          'Cache-Control': 'no-cache',
-          'Referer': 'https://api.yunmge.com/'
-        },
-        timeout: 60000,
-        validateStatus: function (status) {
-          return status >= 200 && status < 600;
-        }
-      });
+      const responseData = await httpsGet(apiUrl);
       
-      console.log(`[${requestId}] api.yunmge.com API 响应:`, response.data);
+      console.log(`[${requestId}] api.yunmge.com API 响应:`, responseData);
       
       const xiaotuoResult = {
-        success: response.data && response.data.code === 200,
-        message: response.data?.msg || '未知错误',
+        success: responseData && responseData.code === 200,
+        message: responseData?.msg || '未知错误',
         shouldNotFallback: false
       };
       
