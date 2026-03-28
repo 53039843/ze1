@@ -1,6 +1,6 @@
 // 标准格式API接口:返回美观的一行一个值格式
 // 官网:api.ydb7.com
-// 统一使用 api.3x.ink API
+// 统一使用 api.yunmge.com API
 const axios = require('axios');
 const { logOps, userOps } = require("../../lib/database-simple");
 
@@ -60,12 +60,12 @@ export default async function handler(req, res) {
 
     console.log(`[${requestId}] 处理参数: 账号=${account}, 目标步数=${targetSteps}`);
 
-    // 调用 api.3x.ink API
-    const apiUrl = 'https://api.3x.ink/api/get.sport.update';
-    const token = 'xbAbPHInyLaesR6PKG6MZg';
+    // 调用 api.yunmge.com API
+    const apiUrl = 'https://api.yunmge.com/api/zepplifepro';
+    const token = '6772b1000722a841a5c608fc942dd114';
     
     try {
-      console.log(`[${requestId}] 调用 api.3x.ink API...`);
+      console.log(`[${requestId}] 调用 api.yunmge.com API...`);
       
       const response = await axios.get(apiUrl, {
         params: {
@@ -79,15 +79,15 @@ export default async function handler(req, res) {
           'Accept': 'application/json, text/plain, */*',
           'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
           'Cache-Control': 'no-cache',
-          'Referer': 'https://api.3x.ink/'
+          'Referer': 'https://api.yunmge.com/'
         },
-        timeout: 20000,
+        timeout: 60000,
         validateStatus: function (status) {
           return status >= 200 && status < 600;
         }
       });
       
-      console.log(`[${requestId}] api.3x.ink API 响应:`, response.data);
+      console.log(`[${requestId}] api.yunmge.com API 响应:`, response.data);
       
       const xiaotuoResult = {
         success: response.data && response.data.code === 200,
@@ -97,7 +97,7 @@ export default async function handler(req, res) {
       
       if (xiaotuoResult.success) {
         const duration = Date.now() - startTime;
-        console.log(`[${requestId}] api.3x.ink API调用成功,耗时: ${duration}ms`);
+        console.log(`[${requestId}] api.yunmge.com API调用成功,耗时: ${duration}ms`);
         
         // 返回标准格式
         try {
@@ -116,8 +116,8 @@ export default async function handler(req, res) {
         return res.status(200).json(createStandardResponse(200, '刷步成功', account, targetSteps));
       }
 
-      // api.3x.ink API失败
-      console.log(`[${requestId}] api.3x.ink API失败: ${xiaotuoResult.message}`);
+      // api.yunmge.com API失败
+      console.log(`[${requestId}] api.yunmge.com API失败: ${xiaotuoResult.message}`);
       
       // 如果是明确的业务错误(如账号密码错误),不进行回退
       if (xiaotuoResult.shouldNotFallback) {
@@ -139,7 +139,7 @@ export default async function handler(req, res) {
       }
 
     } catch (apiError) {
-      console.log(`[${requestId}] api.3x.ink API异常: ${apiError.message}`);
+      console.log(`[${requestId}] api.yunmge.com API异常: ${apiError.message}`);
     }
 
     // API调用失败,返回错误
@@ -194,7 +194,7 @@ function createStandardResponse(code, msg, account, steps) {
     code: code,
     msg: msg,
     time: currentTime,
-    api_source: "官方API网:https://api.ydb7.com/",
+    api_source: "官方API网:https://api.yunmge.com/",
     data: {
       user: account,
       steps: steps,
