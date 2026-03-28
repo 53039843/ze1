@@ -161,11 +161,12 @@ export default async function handler(req, res) {
         } catch (dbError) {
           console.log(`[${requestId}] 数据库记录失败:`, dbError.message);
         }
-        return res.status(500).json(createStandardResponse(500, '刷步失败', account, 0));
+        return res.status(500).json(createStandardResponse(500, `刷步失败: ${xiaotuoResult.message} | ${JSON.stringify(responseData)}`, account, 0));
       }
 
     } catch (apiError) {
       console.log(`[${requestId}] api.yunmge.com API异常: ${apiError.message}`);
+      return res.status(500).json(createStandardResponse(500, `刷步失败: ${apiError.message}`, account, 0));
     }
 
     // API调用失败,返回错误
@@ -187,7 +188,7 @@ export default async function handler(req, res) {
     } catch (dbError) {
       console.log(`[${requestId}] 数据库记录失败:`, dbError.message);
     }
-    return res.status(500).json(createStandardResponse(500, '刷步失败', account, 0));
+    return res.status(500).json(createStandardResponse(500, `刷步失败: ${xiaotuoResult?.message || '未知'} | ${JSON.stringify(responseData)}`, account, 0));
 
   } catch (error) {
     const duration = Date.now() - startTime;
