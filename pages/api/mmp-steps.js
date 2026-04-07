@@ -32,6 +32,16 @@ function httpsGet(url) {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
+        console.log(`[MMP] 原始响应(${res.statusCode}): "${data.substring(0, 200)}"`);
+        if (!data || data.trim() === '') {
+          // 空响应 - 根据状态码判断
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve({ code: 200, msg: 'ok', raw: '' });
+          } else {
+            reject(new Error(`HTTP ${res.statusCode}: 空响应`));
+          }
+          return;
+        }
         try {
           resolve(JSON.parse(data));
         } catch (e) {
