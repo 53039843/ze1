@@ -1,40 +1,55 @@
 // MMP Steps API - 接入 api.mmp.cc 刷步接口
-// 接口文档: GET https://api.mmp.cc/api/ZeppLife?user=账号&pass=密码&count=步数
+// 接口文档: GET http://api.mmp.cc/api/ZeppLife?user=账号&pass=密码&count=步数
+// 注意: 使用 HTTP 协议（CDN 会重定向到 HTTPS，但直接 HTTPS 可能 404）
 
+import http from 'http';
 import https from 'https';
 import crypto from 'crypto';
 
 /**
- * 封装 HTTPS GET 请求为 Promise
+ * 封装 HTTP/HTTPS GET 请求为 Promise，支持重定向
  */
-function httpsGet(url) {
+function httpGet(url, maxRedirects = 3) {
   return new Promise((resolve, reject) => {
     const urlObj = new URL(url);
+    const isHttps = urlObj.protocol === 'https:';
+    const lib = isHttps ? https : http;
+
     const options = {
       hostname: urlObj.hostname,
-      port: urlObj.port || 443,
+      port: urlObj.port || (isHttps ? 443 : 80),
       path: urlObj.pathname + urlObj.search,
       method: 'GET',
       rejectUnauthorized: false,
-      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
-      ciphers: 'DEFAULT:@SECLEVEL=0',
-      minVersion: 'TLSv1',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'application/json, text/plain, */*',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.7339.128 Safari/537.36',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
         'Accept-Language': 'zh-CN,zh;q=0.9',
         'Cache-Control': 'no-cache'
       },
       timeout: 30000
     };
 
-    const req = https.request(options, (res) => {
+    if (isHttps) {
+      options.secureOptions = crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT;
+      options.ciphers = 'DEFAULT:@SECLEVEL=0';
+      options.minVersion = 'TLSv1';
+    }
+
+    const req = lib.request(options, (res) => {
+      // 处理重定向
+      if ((res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307 || res.statusCode === 308) && res.headers.location && maxRedirects > 0) {
+        const redirectUrl = res.headers.location.startsWith('http') ? res.headers.location : `${urlObj.protocol}//${urlObj.host}${res.headers.location}`;
+        console.log(`[MMP] 重定向 ${res.statusCode} -> ${redirectUrl}`);
+        resolve(httpGet(redirectUrl, maxRedirects - 1));
+        return;
+      }
+
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
-        console.log(`[MMP] 原始响应(${res.statusCode}): "${data.substring(0, 200)}"`);
+        console.log(`[MMP] 原始响应(HTTP ${res.statusCode}): "${data.substring(0, 300)}"`);
         if (!data || data.trim() === '') {
-          // 空响应 - 根据状态码判断
           if (res.statusCode >= 200 && res.statusCode < 300) {
             resolve({ code: 200, msg: 'ok', raw: '' });
           } else {
@@ -45,8 +60,7 @@ function httpsGet(url) {
         try {
           resolve(JSON.parse(data));
         } catch (e) {
-          // 如果不是 JSON，直接返回原始文本
-          resolve({ raw: data });
+          resolve({ raw: data, statusCode: res.statusCode });
         }
       });
     });
@@ -68,10 +82,11 @@ function httpsGet(url) {
  * @returns {Promise<object>} API 响应结果
  */
 async function callMmpApi(user, pass, count) {
-  const apiUrl = `https://api.mmp.cc/api/ZeppLife?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}&count=${count}`;
-  console.log(`[MMP] 调用接口: https://api.mmp.cc/api/ZeppLife?user=${user}&pass=***&count=${count}`);
-  const result = await httpsGet(apiUrl);
-  console.log(`[MMP] 接口响应:`, result);
+  // 使用 HTTP 协议（避免 HTTPS 的 CDN 封锁问题）
+  const apiUrl = `http://api.mmp.cc/api/ZeppLife?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}&count=${count}`;
+  console.log(`[MMP] 调用接口: http://api.mmp.cc/api/ZeppLife?user=${user}&pass=***&count=${count}`);
+  const result = await httpGet(apiUrl);
+  console.log(`[MMP] 接口响应:`, JSON.stringify(result).substring(0, 200));
   return result;
 }
 
@@ -162,17 +177,18 @@ export default async function handler(req, res) {
     const duration = Date.now() - startTime;
 
     // 判断是否成功（兼容多种响应格式）
+    const rawText = apiResult.raw || '';
     const isSuccess =
       (apiResult.code !== undefined && (apiResult.code === 200 || apiResult.code === '200' || apiResult.code === 0)) ||
       (apiResult.status !== undefined && (apiResult.status === 200 || apiResult.status === 'success' || apiResult.status === 'ok')) ||
       (apiResult.msg !== undefined && (apiResult.msg === 'ok' || apiResult.msg === 'success' || String(apiResult.msg).includes('成功'))) ||
-      (apiResult.raw !== undefined && (apiResult.raw.includes('成功') || apiResult.raw.includes('success')));
+      (rawText.includes('成功') || rawText.includes('success') || rawText.includes('"code":200') || rawText.includes('"code": 200'));
 
     if (isSuccess) {
       console.log(`[${requestId}] 刷步成功，耗时: ${duration}ms`);
       return res.status(200).json(createResponse(200, '刷步成功', account, targetSteps));
     } else {
-      const errMsg = apiResult.msg || apiResult.message || apiResult.raw || JSON.stringify(apiResult);
+      const errMsg = apiResult.msg || apiResult.message || rawText.substring(0, 100) || JSON.stringify(apiResult).substring(0, 100);
       console.log(`[${requestId}] 刷步失败: ${errMsg}，耗时: ${duration}ms`);
       return res.status(500).json(createResponse(500, `刷步失败: ${errMsg}`, account, 0));
     }
