@@ -1,0 +1,63 @@
+name: 每日自动刷步
+
+on:
+  schedule:
+    # 每天北京时间 09:00 执行（UTC+8，即 UTC 01:00）
+    - cron: '0 1 * * *'
+  # 支持手动触发
+  workflow_dispatch:
+    inputs:
+      account:
+        description: '账号（留空使用默认账号）'
+        required: false
+        default: ''
+      password:
+        description: '密码（留空使用默认密码）'
+        required: false
+        default: ''
+      steps:
+        description: '步数（留空使用默认步数 23456）'
+        required: false
+        default: ''
+
+jobs:
+  auto-steps:
+    name: 自动刷步 - api.mmp.cc
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: 刷步 - 调用 api.mmp.cc 接口
+        run: |
+          # 使用输入参数或默认值
+          ACCOUNT="${{ github.event.inputs.account || '53039843@qq.com' }}"
+          PASSWORD="${{ github.event.inputs.password || '666888zyy' }}"
+          STEPS="${{ github.event.inputs.steps || '23456' }}"
+
+          echo "=========================================="
+          echo "  每日自动刷步任务"
+          echo "  时间: $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S') (北京时间)"
+          echo "  账号: ${ACCOUNT}"
+          echo "  步数: ${STEPS}"
+          echo "=========================================="
+
+          # 调用 api.mmp.cc 接口
+          API_URL="https://api.mmp.cc/api/ZeppLife?user=$(python3 -c "import urllib.parse; print(urllib.parse.quote('${ACCOUNT}'))")&pass=$(python3 -c "import urllib.parse; print(urllib.parse.quote('${PASSWORD}'))")&count=${STEPS}"
+
+          echo "正在调用接口..."
+          RESPONSE=$(curl -s --max-time 30 --retry 3 --retry-delay 5 \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            -H "Accept: application/json, text/plain, */*" \
+            "${API_URL}")
+
+          echo "接口响应: ${RESPONSE}"
+
+          # 判断是否成功
+          if echo "${RESPONSE}" | grep -qiE '"code"\s*:\s*(200|0)|"status"\s*:\s*"?(ok|success|200)"?|成功'; then
+            echo ""
+            echo "✅ 刷步成功！账号: ${ACCOUNT}，步数: ${STEPS}"
+          else
+            echo ""
+            echo "❌ 刷步失败，响应内容: ${RESPONSE}"
+            exit 1
+          fi
